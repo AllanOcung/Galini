@@ -1,4 +1,4 @@
-# healthcare
+# Galini
 
 A new Flutter project.
 
