@@ -1,3 +1,4 @@
 {
-    "cmake.sourceDirectory": "D:/Downloads/healthcare-master/healthcare-master/windows/flutter"
+    "cmake.sourceDirectory": "D:/Downloads/healthcare-master/healthcare-master/windows/flutter",
+    "java.configuration.updateBuildConfiguration": "automatic"
 }

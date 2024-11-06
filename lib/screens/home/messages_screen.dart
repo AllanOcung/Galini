@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:galini/screens/chat_screen.dart';
+import 'package:galini/screens/home/chat_screen.dart';
 
 class MessagesScreen extends StatelessWidget {
   final List imgs = [

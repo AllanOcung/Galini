@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:galini/screens/login_screen.dart';
-import 'package:galini/screens/sign_up_screen.dart';
-import 'package:galini/widgets/navbar_roots.dart';
+import 'package:galini/screens/authenticate/login_screen.dart';
+import 'package:galini/screens/authenticate/role_selection_screen.dart';
+
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -16,7 +16,7 @@ class WelcomeScreen extends StatelessWidget {
         child: Column(
           children: [
             const SizedBox(
-              height: 15,
+              height: 30,
             ),
             Align(
               alignment: Alignment.centerRight,
@@ -25,30 +25,35 @@ class WelcomeScreen extends StatelessWidget {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const NavBarRoots(),
+                        builder: (context) => const LoginScreen(),
                       ));
                 },
                 child: const Text(
                   "SKIP",
                   style: TextStyle(
-                    color: Color.fromARGB(255, 51, 172, 92),
+                    color: Color.fromARGB(255, 103, 164, 245),
                     fontSize: 20,
                   ),
                 ),
               ),
             ),
             const SizedBox(
-              height: 50,
+              height: 20,
             ),
             Padding(
-              padding: const EdgeInsets.all(20),
-              child: Image.asset("images/doctors.png"),
+              padding: const EdgeInsets.all(10),
+              
+              child: Image.asset(
+                "images/doctors.png",
+                 width: 150,
+                 height: 150,
+                ),
             ),
-            const SizedBox(height: 50),
+            const SizedBox(height: 30),
             const Text(
               "Galini",
               style: TextStyle(
-                color: Color.fromARGB(255, 51, 172, 92),
+                color: Color.fromARGB(255, 103, 164, 245),
                 fontSize: 35,
                 fontWeight: FontWeight.bold,
                 letterSpacing: 1,
@@ -62,6 +67,8 @@ class WelcomeScreen extends StatelessWidget {
                 color: Colors.black54,
                 fontSize: 18,
                 fontWeight: FontWeight.w500,
+                letterSpacing: 1.0,
+                fontStyle: FontStyle.italic,
               ),
             ),
             const SizedBox(height: 60),
@@ -69,19 +76,19 @@ class WelcomeScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Material(
-                  color: const Color.fromARGB(255, 51, 172, 92),
+                  color: const Color.fromARGB(255, 103, 164, 245),
                   borderRadius: BorderRadius.circular(10),
                   child: InkWell(
                     onTap: () {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const loginScreen(),
+                            builder: (context) => const LoginScreen(),
                           ));
                     },
                     child: Container(
                       padding:
-                          const EdgeInsets.symmetric(vertical: 15, horizontal: 40),
+                          const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
                       child: const Text(
                         "Log In",
                         style: TextStyle(
@@ -94,19 +101,19 @@ class WelcomeScreen extends StatelessWidget {
                   ),
                 ),
                 Material(
-                  color: const Color.fromARGB(255, 51, 172, 92),
+                  color: const Color.fromARGB(255, 103, 164, 245),
                   borderRadius: BorderRadius.circular(10),
                   child: InkWell(
                     onTap: () {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const SignUpScreen(),
+                            builder: (context) => const RoleSelectionScreen(),
                           ));
                     },
                     child: Container(
                       padding:
-                          const EdgeInsets.symmetric(vertical: 15, horizontal: 40),
+                          const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
                       child: const Text(
                         "Sign Up",
                         style: TextStyle(
