@@ -25,6 +25,8 @@ class _TherapistSignUpScreenState extends State<TherapistSignUpScreen> {
   String password = '';
   String location = '';
   String phoneNumber = '';
+  //String selectedRole = 'therapist'; // Default role is 'therapist'
+
 
   // This method shows a dialog in case of success or failure
   void _showDialog(String title, String message) {

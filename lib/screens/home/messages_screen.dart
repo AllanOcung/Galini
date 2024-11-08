@@ -140,11 +140,15 @@ class MessagesScreen extends StatelessWidget {
             itemBuilder: (context, index) {
               return ListTile(
                 onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const ChatScreen(),
-                      ));
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (context) => ChatScreen(
+                  //       conversationId: conversationId, // Pass the correct conversation ID here
+                  //       currentUserId: currentUserId,   // Pass the correct user ID here
+                  //     ),
+                  //   ),
+                  // );
                 },
                 leading: CircleAvatar(
                   radius: 30,

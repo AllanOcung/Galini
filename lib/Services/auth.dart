@@ -94,6 +94,7 @@ class Authenticate {
           phoneNumber: phoneNumber,
           password: hashedPassword,
           role: 'user',
+          hasCompletedIntro: false,
         );
 
         // Save to Firestore

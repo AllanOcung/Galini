@@ -7,8 +7,6 @@ import 'package:galini/screens/home/self_assessment_screen.dart';
 import 'package:galini/screens/home/therapist_finder_screen.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-
-
 class NavBarRoots extends StatefulWidget {
   const NavBarRoots({super.key});
 
@@ -29,18 +27,33 @@ class _NavBarRootsState extends State<NavBarRoots> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor:const Color(0xFFD3E9FF),
       body: _screens[_selectedIndex],
-      bottomNavigationBar: SizedBox(
-        height: 80,
+      bottomNavigationBar: Container(
+        margin: const EdgeInsets.all(10), // Margin to give "floating" effect
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.9),
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            const BoxShadow(
+              color: Colors.black12,
+              blurRadius: 10,
+              spreadRadius: 2,
+            ),
+          ],
+        ),
         child: BottomNavigationBar(
-          backgroundColor: Colors.white,
+          elevation: 0, // Remove default elevation
+          backgroundColor: Colors.transparent,
           type: BottomNavigationBarType.fixed,
           selectedItemColor: const Color.fromARGB(255, 103, 164, 245),
           unselectedItemColor: Colors.black26,
           selectedLabelStyle: const TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: 15,
+            fontSize: 13,
+          ),
+          unselectedLabelStyle: const TextStyle(
+            fontSize: 13,
           ),
           currentIndex: _selectedIndex,
           onTap: (index) {
@@ -50,24 +63,30 @@ class _NavBarRootsState extends State<NavBarRoots> {
           },
           items: const [
             BottomNavigationBarItem(
-                icon: Icon(Icons.home_filled), label: "Home"),
+              icon: Icon(Icons.home_filled),
+              label: "Home",
+            ),
             BottomNavigationBarItem(
-                icon: Icon(
+              icon: Icon(
                   CupertinoIcons.chat_bubble_text_fill,
                 ),
-                label: "Messages"),
+              label: "Messages",
+            ),
             BottomNavigationBarItem(
-                icon: Icon(Icons.calendar_month_outlined), label: "Schedule"),
+              icon: Icon(Icons.calendar_month_outlined),
+              label: "Schedule",
+            ),
             BottomNavigationBarItem(
-                icon: Icon(Icons.self_improvement), label: "Self-Assessment"),
+               icon: Icon(Icons.self_improvement),
+              label: "Self-Assessment",
+            ),
             BottomNavigationBarItem(
-                icon: Icon(FontAwesomeIcons.userDoctor), label: "Therapist"),
+              icon: Icon(FontAwesomeIcons.userDoctor),
+              label: "Therapist",
+            ),
           ],
         ),
       ),
     );
   }
 }
-
-
-

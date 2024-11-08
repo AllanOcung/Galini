@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:galini/Services/auth.dart';
 import 'package:galini/models/user.dart';
 import 'package:galini/screens/authenticate/login_screen.dart';
+import 'package:galini/screens/authenticate/first_time_questionnaire_screen.dart'; // Ensure this screen exists
 import 'package:galini/widgets/navbar_roots.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -23,14 +25,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
   String email = '';
   String phoneNumber = '';
   String password = '';
-  String selectedRole = 'user'; // Default role is 'user'
 
-  // This method shows a dialog in case of error
+  // Method to show error dialog
   void _showErrorDialog(String message) {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text("Error"),
+        title: const Text("Sign-up Error"),
         content: Text(message),
         actions: <Widget>[
           TextButton(
@@ -44,6 +45,33 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
+  // Method to check if this is the first time login
+  Future<void> checkFirstTimeLogin(String userId) async {
+    try {
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('users').doc(userId).get();
+
+      if (userDoc.exists && userDoc['hasCompletedIntro'] == true) {
+        // Navigate to the main dashboard
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const NavBarRoots(),
+          ),
+        );
+      } else {
+        // Navigate to the first-time questionnaire screen
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => FirstTimeQuestionnaireScreen(userId: userId),
+          ),
+        );
+      }
+    } catch (e) {
+      _showErrorDialog('Failed to check user status. Please try again.');
+      print('Error in checkFirstTimeLogin: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,8 +88,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   padding: const EdgeInsets.all(20),
                   child: Image.asset(
                     "images/doctors.png",
-                     width: 150,
-                     height: 150,
+                    width: 150,
+                    height: 150,
                   ),
                 ),
                 Padding(
@@ -123,32 +151,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     },
                   ),
                 ),
-                // Padding(
-                //   padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
-                //   child: DropdownButtonFormField<String>(
-                //     value: selectedRole,
-                //     decoration: const InputDecoration(
-                //       labelText: "Role",
-                //       border: OutlineInputBorder(),
-                //       prefixIcon: Icon(Icons.person_outline),
-                //     ),
-                //     items: const [
-                //       DropdownMenuItem(
-                //         value: 'user',
-                //         child: Text("Register as User"),
-                //       ),
-                //       DropdownMenuItem(
-                //         value: 'therapist',
-                //         child: Text("Register as Therapist"),
-                //       ),
-                //     ],
-                //     onChanged: (value) {
-                //       setState(() {
-                //         selectedRole = value!;
-                //       });
-                //     },
-                //   ),
-                // ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
                   child: TextFormField(
@@ -195,24 +197,28 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               isLoading = true;
                             });
 
-                            // Sign up the user with the selected role
-                            CustomUser? result = await _auth.signUp(
-                              fullName,
-                              email,
-                              phoneNumber,
-                              password
-                            );
+                            try {
+                              // Sign up the user
+                              CustomUser? result = await _auth.signUp(
+                                fullName,
+                                email,
+                                phoneNumber,
+                                password,
+                              );
 
-                            if (result != null) {
-                               // Navigate to user dashboard
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const NavBarRoots(),
-                                  ),
-                                );
-                            } else {
-                              _showErrorDialog('Sign up failed. Please try again.');
+                              if (result != null) {
+                                // Check if it's the first time login
+                                await checkFirstTimeLogin(result.uid);
+                              } else {
+                                _showErrorDialog('Sign up failed. Please try again.');
+                              }
+                            } catch (e) {
+                              _showErrorDialog('$e');
+                              print('Sign-up error: $e');
+                            } finally {
+                              setState(() {
+                                isLoading = false;
+                              });
                             }
                           }
                         },
@@ -277,8 +283,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ],
             ),
           ),
-        ),
-      ),
-    );
-  }
-}
+          ),
+          ),
+        );
+      }
+    }

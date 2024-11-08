@@ -40,33 +40,33 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
     }
   }
 
-  Future<void> approveRequest() async {
-    try {
-      // Update the status to "approved" in therapist_requests
-      await FirebaseFirestore.instance
-          .collection('therapist_requests')
-          .doc(widget.requestId)
-          .update({'status': 'approved'});
+Future<void> approveRequest() async {
+  try {
+    final therapistRequestRef = FirebaseFirestore.instance
+        .collection('therapist_requests')
+        .doc(widget.requestId);
 
-      // Move therapist data to the users collection
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(widget.requestId)
-          .set(therapistData!);
+    // First, update the status to "approved"
+    await therapistRequestRef.update({'status': 'approved'});
 
-      print("Request approved and user moved to 'users' collection.");
-    } catch (e) {
-      print("Error approving request: $e");
-    }
+    // After updating the status, the Firebase function will automatically trigger
+    print("Request approved, email will be sent, and therapist moved to 'users' collection.");
+  } catch (e) {
+    print("Error approving request: $e");
   }
+}
+
+
 
   Future<void> rejectRequest() async {
     try {
-      // Update the status to "rejected" in therapist_requests
-      await FirebaseFirestore.instance
-          .collection('therapist_requests')
-          .doc(widget.requestId)
-          .update({'status': 'rejected'});
+       final therapistRequestRef = FirebaseFirestore.instance
+        .collection('therapist_requests')
+        .doc(widget.requestId);
+
+      // Update the status to "rejected" and then delete the document
+      await therapistRequestRef.update({'status': 'rejected'});
+      await therapistRequestRef.delete();
 
       print("Request rejected.");
     } catch (e) {

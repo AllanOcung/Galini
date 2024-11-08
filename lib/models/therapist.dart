@@ -8,6 +8,7 @@ class TherapistRequest {
   final String requestDate; 
   final String location;
   final String phoneNumber;
+  //final String role;
 
   TherapistRequest({
     required this.name,

@@ -33,7 +33,7 @@ class _SettingScreenState extends State<SettingScreen> {
 
         // Update state with the fetched user's name
         setState(() {
-          userName = userDoc['FullName'] ?? 'User'; // Use 'User' if name not found
+          userName = userDoc['fullName'] ?? 'User'; // Use 'User' if name not found
         });
       } catch (e) {
         print('Error fetching user data: $e');

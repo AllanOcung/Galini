@@ -33,7 +33,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
             .doc(currentUser!.uid)
             .get();
         setState(() {
-          userName = userDoc['FullName'] ?? 'User'; // Use 'User' if name not found
+          userName = userDoc['fullName'] ?? 'User'; // Use 'User' if name not found
         });
       } catch (e) {
         print('Error fetching user data: $e');
@@ -61,7 +61,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
     try {
       QuerySnapshot snapshot = await FirebaseFirestore.instance
           .collection('users')
-          .where('Role', isEqualTo: 'user')
+          .where('role', isEqualTo: 'user')
           .get();
 
       setState(() {

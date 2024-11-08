@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:galini/screens/admin/admin_dashboard.dart';
 import 'package:galini/screens/admin/admin_navbar.dart';
+import 'package:galini/screens/authenticate/first_time_questionnaire_screen.dart';
 import 'package:galini/screens/authenticate/role_selection_screen.dart';
 import 'package:galini/screens/therapist/therapist_dashboard.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -40,6 +40,34 @@ class _LoginScreenState extends State<LoginScreen> {
         ],
       ),
     );
+  }
+
+  // Method to check if this is the first time login
+  Future<void> checkFirstTimeLogin(String userId) async {
+    try {
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('users').doc(userId).get();
+
+      if (userDoc.exists && userDoc['hasCompletedIntro'] == true) {
+        // Navigate to the main dashboard
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const NavBarRoots(),
+          ),
+        );
+      } else {
+        // Navigate to the first-time questionnaire screen
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => FirstTimeQuestionnaireScreen(userId: userId),
+          ),
+        );
+      }
+    } catch (e) {
+      _showErrorDialog('Failed to check user status. Please try again.');
+      print('Error in checkFirstTimeLogin: $e');
+    }
   }
 
   @override
@@ -121,59 +149,78 @@ class _LoginScreenState extends State<LoginScreen> {
                         padding: const EdgeInsets.all(15),
                         child: InkWell(
                           onTap: () async {
-                            if (_formKey.currentState!.validate()) {
-                              _formKey.currentState!.save();
-                              setState(() {
-                                isLoading = true; // Show loading spinner
-                              });
+                              if (_formKey.currentState!.validate()) {
+                                _formKey.currentState!.save();
+                                setState(() {
+                                  isLoading = true; // Show loading spinner
+                                });
 
-                              try {
-                                // Attempt to sign in the user using Firebase Authentication
-                                UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-                                  email: email,
-                                  password: password,
-                                );
+                                try {
+                                  // Attempt to sign in the user using Firebase Authentication
+                                  UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+                                    email: email,
+                                    password: password,
+                                  );
 
-                                // If login is successful, fetch the user role
-                                if (userCredential.user != null) {
-                                  // Fetch the user document from Firestore
-                                  DocumentSnapshot userData = await FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid).get();
+                                  if (userCredential.user != null) {
+                                    String userId = userCredential.user!.uid;
+                                    String? role;
 
-                                  if (userData.exists) {
-                                    String role = userData['Role']; // Get the user's role
+                                    // Check for user role in 'users' collection
+                                    DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('users').doc(userId).get();
+                                    if (userDoc.exists) {
+                                      role = userDoc['role'];
+                                    }
+
+                                    // If not found in 'users', check in 'therapists' collection with 'approved' status
+                                    if (role == null) {
+                                      QuerySnapshot therapistQuery = await FirebaseFirestore.instance
+                                          .collection('therapist_requests')
+                                          .where('uid', isEqualTo: userId)
+                                          .where('status', isEqualTo: 'approved')
+                                          .get();
+
+                                      if (therapistQuery.docs.isNotEmpty) {
+                                        role = therapistQuery.docs.first['role'];
+                                      }
+                                    }
 
                                     // Navigate based on role
-                                    if (role == 'admin') {
-                                      Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(builder: (context) => const AdminNavBar()), // Admin Dashboard
-                                      );
-                                    } else if (role == 'therapist') {
-                                      Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(builder: (context) => const TherapistDashboard()), // Therapist Dashboard
-                                      );
+                                    if (role != null) {
+                                      if (role == 'admin') {
+                                        Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(builder: (context) => const AdminNavBar()), // Admin Dashboard
+                                        );
+                                      } else if (role == 'therapist') {
+                                        Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(builder: (context) => const TherapistDashboard()), // Therapist Dashboard
+                                        );
+                                      } else {
+                                         // Check if it's the first time login
+                                        await checkFirstTimeLogin(userId);
+                                        // Navigator.pushReplacement(
+                                        //   context,
+                                        //   MaterialPageRoute(builder: (context) => const NavBarRoots()), // Regular User Dashboard
+                                        // );
+                                      }
                                     } else {
-                                      Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(builder: (context) => const NavBarRoots()), // Regular User Dashboard
-                                      );
+                                      _showErrorDialog('User data not found.');
                                     }
                                   } else {
-                                    _showErrorDialog('User data not found.');
+                                    _showErrorDialog('Login failed. Please try again.');
                                   }
-                                } else {
-                                  _showErrorDialog('Login failed. Please try again.');
+                                } catch (e) {
+                                  _showErrorDialog('Login failed. Please check your credentials and try again.');
+                                } finally {
+                                  setState(() {
+                                    isLoading = false; // Hide loading indicator
+                                  });
                                 }
-                              } catch (e) {
-                                _showErrorDialog('Login failed. Please check your credentials and try again.');
-                              } finally {
-                                setState(() {
-                                  isLoading = false; // Hide loading indicator
-                                });
                               }
-                            }
-                          },
+                            },
+
                           child: Container(
                             padding: const EdgeInsets.symmetric(vertical: 10),
                             width: 330,
@@ -201,36 +248,38 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                       ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      "Don't have an account?",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black54,
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const RoleSelectionScreen(),
-                          ),
-                        );
-                      },
-                      child: const Text(
-                        "Create Account",
+                Center(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        "Don't have an account?",
                         style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Color.fromARGB(255, 103, 164, 245),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black54,
                         ),
                       ),
-                    ),
-                  ],
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const RoleSelectionScreen(),
+                            ),
+                          );
+                        },
+                        child: const Text(
+                          "Create Account",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Color.fromARGB(255, 103, 164, 245),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
