@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:galini/screens/admin/admin_navbar.dart';
 import 'package:galini/screens/authenticate/first_time_questionnaire_screen.dart';
 import 'package:galini/screens/authenticate/role_selection_screen.dart';
-import 'package:galini/screens/therapist/therapist_dashboard.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:galini/screens/therapist/navbar_roots.dart';
 import 'package:galini/widgets/navbar_roots.dart';
 
 
@@ -195,7 +195,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       } else if (role == 'therapist') {
                                         Navigator.pushReplacement(
                                           context,
-                                          MaterialPageRoute(builder: (context) => const TherapistDashboard()), // Therapist Dashboard
+                                          MaterialPageRoute(builder: (context) => const NavBarRoot()), // Therapist Dashboard
                                         );
                                       } else {
                                          // Check if it's the first time login

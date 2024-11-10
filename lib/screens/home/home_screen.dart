@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart'; // Import for Firestore
 import 'package:galini/screens/home/appointment_screen.dart';
 import 'package:galini/screens/home/settings_screen.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 
 class HomeScreen extends StatefulWidget {
@@ -14,20 +13,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final List<String> symptoms = [
-    "Temperature",
-    "Snuffle",
-    "Fever",
-    "Cough",
-    "Cold",
-  ];
-
-  final List<String> imgs = [
-    "doctor1.jpg",
-    "doctor2.jpg",
-    "doctor3.jpg",
-    "doctor4.jpg",
-  ];
 
   String userName = "User"; // Placeholder for user name
   User? currentUser = FirebaseAuth.instance.currentUser; // Get current user
@@ -185,12 +170,22 @@ class _HomeScreenState extends State<HomeScreen> {
                         style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.bold),
                       ),
                       //SizedBox(width: 135),
-                      Text(
-                        "See all",
-                        style: TextStyle(fontSize: 10, color: Colors.grey),
+                      InkWell(
+                        // onTap: (){
+                        //   Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //       builder: (context) => const ScheduleScreen(),
+                        //     ),
+                        //   );
+                        // },
+                        child: Text(
+                          "See all",
+                          style: TextStyle(fontSize: 10, color: Colors.grey),
+                          
+                        ),
                       ),
-                      ],
-                      
+                      ],                   
                     ),
                   ),
                   // Next Appointment Card
@@ -372,6 +367,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _specialistItem(String name, String role, String therapistId) {
     return Card(
+      color: Colors.grey[200],
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       elevation: 3,
       shape: RoundedRectangleBorder(
@@ -379,7 +375,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       child: ListTile(
         leading: const CircleAvatar(
-          backgroundImage: AssetImage('images/doctor2.jpg'), // Placeholder image
+          backgroundImage: AssetImage('images/doctor2.jpg'), 
         ),
         title: Text(name),
         subtitle: Text(role),
@@ -389,7 +385,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => AppointmentScreen(therapistId: therapistId),
+            builder: (context) => AppointmentScreen(therapistId: therapistId, currentUserId: currentUser!.uid),
           ),
         );
         },
