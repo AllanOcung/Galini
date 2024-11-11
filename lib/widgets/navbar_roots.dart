@@ -3,11 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:galini/screens/home/home_screen.dart';
 import 'package:galini/screens/home/messages_screen.dart';
 import 'package:galini/screens/home/schedule_screen.dart';
-import 'package:galini/screens/self_assessment/self_assessment_screen.dart';
 import 'package:galini/screens/home/therapist_finder_screen.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:galini/screens/therapist/assessment_categories_screen.dart';
 
 class NavBarRoots extends StatefulWidget {

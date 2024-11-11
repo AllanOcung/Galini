@@ -107,7 +107,6 @@ class _PatientAssessmentScreenState extends State<PatientAssessmentScreen> {
                             ),
                             const SizedBox(height: 8),
                             ...question.options.asMap().entries.map((entry) {
-                              int optionIndex = entry.key;
                               Option option = entry.value;
                               return RadioListTile<int>(
                                 title: Text(option.text),

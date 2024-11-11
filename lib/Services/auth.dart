@@ -31,17 +31,17 @@ class Authenticate {
       Map<String, dynamic>? data = userData.data();
 
       // Ensure all required arguments are passed to fromFirestore
-      if (data != null) {
-        String fullName = data['fullName'] ?? '';
-        String email = data['email'] ?? '';
-        String phoneNumber = data['phoneNumber'] ?? '';
-        String role = data['role'] ?? '';
+      String fullName = data?['fullName'] ?? '';
+      String email = data?['email'] ?? '';
+      String phoneNumber = data?['phoneNumber'] ?? '';
+      String role = data?['role'] ?? '';
 
+      if (data != null) {
         return CustomUser.fromFirestore(data, user.uid, fullName, email, phoneNumber, role);
       } else {
-        return _userFromFirebaseUser(user);
+        throw Exception('User data not found in Firestore.');
       }
-    });
+        });
   }
 
   // Register Therapist with email and password
