@@ -541,9 +541,7 @@ void _rescheduleAppointment(String appointmentId) async {
       initialDate: DateTime.now(),
       firstDate: DateTime.now(),
       lastDate: DateTime.now().add(Duration(days: 365)),
-    );
-
-    if (newDate == null) return; // Return if no date is selected
+    ); // Return if no date is selected
 
     // Select new time
     TimeOfDay? newTime = await showTimePicker(
@@ -554,6 +552,8 @@ void _rescheduleAppointment(String appointmentId) async {
     if (newTime == null) return; // Return if no time is selected
 
     // Combine date and time into a single DateTime object
+    if (newDate == null) return; // Return if no date is selected
+
     DateTime newDateTime = DateTime(
       newDate.year,
       newDate.month,
