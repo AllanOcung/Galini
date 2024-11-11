@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart'; // Import for Firestore
+import 'package:galini/screens/appointments/patient_appointment_screen.dart';
 import 'package:galini/screens/home/appointment_screen.dart';
 import 'package:galini/screens/home/settings_screen.dart';
 
@@ -132,12 +133,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       _buildVisitCard(
                         context: context,
                         onTap: () {
-                          //  Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //     builder: (context) => AppointmentScreen(),
-                          //   ),
-                          // );
+                           Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => PatientAppointmentBookingScreen(),
+                            ),
+                          );
                         },
                         icon: Icons.local_hospital,
                         iconColor: const Color.fromARGB(255, 103, 164, 245),

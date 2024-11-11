@@ -30,7 +30,7 @@ class _NavBarRootsState extends State<NavBarRoot> {
     const HomeScreen(),
     const PatientsScreen(),
     const InboxScreen(),
-    const AppointmentsScreen(),
+    TherapistAppointmentsScreen(),
     MoreScreen(),
   ];
 

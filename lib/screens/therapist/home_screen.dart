@@ -5,6 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:galini/screens/therapist/assessment_management_screen.dart';
 import 'package:galini/screens/therapist/assessment_question_setting.dart';
 
+import '../appointments/therapist_appointment _management_screen.dart';
+
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -153,6 +155,34 @@ class HomeScreen extends StatelessWidget {
                       children: [
                         Text(
                           "Manage assessments",
+                          style: TextStyle(fontSize: 18, color: Colors.white),
+                        ),
+                        Icon(Icons.arrow_forward, color: Colors.white),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => TherapistManagementScreen()),
+                  );
+                },
+                child: Card(
+                  color: const Color(0xFF293325),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  elevation: 4,
+                  child: const Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Manage Appointments",
                           style: TextStyle(fontSize: 18, color: Colors.white),
                         ),
                         Icon(Icons.arrow_forward, color: Colors.white),
