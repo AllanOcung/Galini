@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class PatientAppointmentBookingScreen extends StatefulWidget {
+  const PatientAppointmentBookingScreen({super.key});
+
   @override
   _PatientAppointmentBookingScreenState createState() => _PatientAppointmentBookingScreenState();
 }
@@ -79,7 +81,7 @@ Future<void> bookAppointment() async {
   final user = _auth.currentUser;
   if (user == null) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("You must be logged in to book an appointment.")),
+      const SnackBar(content: Text("You must be logged in to book an appointment.")),
     );
     return;
   }
@@ -127,7 +129,7 @@ Future<void> bookAppointment() async {
     try {
       await _firestore.collection('appointments').doc(appointmentId).set(appointmentData);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Appointment booked successfully!")),
+        const SnackBar(content: Text("Appointment booked successfully!")),
       );
 
       // Optionally, reset the form
@@ -146,7 +148,7 @@ Future<void> bookAppointment() async {
     }
   } else {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("Please complete all fields.")),
+      const SnackBar(content: Text("Please complete all fields.")),
     );
   }
 }
@@ -158,7 +160,7 @@ Future<void> bookAppointment() async {
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(Duration(days: 30)),
+      lastDate: DateTime.now().add(const Duration(days: 30)),
     );
     if (picked != null && picked != selectedDate) {
       setState(() {
@@ -181,7 +183,7 @@ Future<void> bookAppointment() async {
     return Scaffold(
       backgroundColor: const Color(0xFFD3E9FF),
       appBar: AppBar(
-        title: Text("Book Appointment"),
+        title: const Text("Book Appointment"),
         backgroundColor: const Color(0xFFBDDDFC),
       ),
       body: Padding(
@@ -194,14 +196,14 @@ Future<void> bookAppointment() async {
               future: fetchTherapists(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return Text("No therapists available.");
+                  return const Text("No therapists available.");
                 }
 
                 final therapists = snapshot.data!;
                 return DropdownButtonFormField<String>(
-                  hint: Text("Select Therapist"),
+                  hint: const Text("Select Therapist"),
                   value: selectedTherapistId,
                   onChanged: (String? newValue) {
                     setState(() {
@@ -224,13 +226,13 @@ Future<void> bookAppointment() async {
                 );
               },
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
 
             // Date Picker - Display available dates if available
             availableDates.isEmpty
-              ? Text("No available dates.")
+              ? const Text("No available dates.")
               : DropdownButtonFormField<String>(
-                  hint: Text("Select Date"),
+                  hint: const Text("Select Date"),
                   value: selectedDate == null ? null : formatDate(selectedDate!),
                   onChanged: (String? newValue) {
                     setState(() {
@@ -248,13 +250,13 @@ Future<void> bookAppointment() async {
                     );
                   }).toList(),
                 ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
 
             // Time Slot Dropdown - Display available time slots if available
             availableTimeSlots.isEmpty
-                ? Text("No available time slots.")
+                ? const Text("No available time slots.")
                 : DropdownButtonFormField<String>(
-                    hint: Text("Select Time Slot"),
+                    hint: const Text("Select Time Slot"),
                     value: selectedTimeSlot,
                     onChanged: (String? newValue) {
                       setState(() {
@@ -268,13 +270,13 @@ Future<void> bookAppointment() async {
                       );
                     }).toList(),
                   ),
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
 
             // Book Appointment Button
             Center(
               child: ElevatedButton(
                 onPressed: bookAppointment,
-                child: Text("Book Appointment"),
+                child: const Text("Book Appointment"),
               ),
             ),
           ],

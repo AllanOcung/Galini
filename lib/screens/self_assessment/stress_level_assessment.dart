@@ -11,7 +11,7 @@ class StressLevelAssessmentScreen extends StatefulWidget {
 class _StressLevelAssessmentScreenState extends State<StressLevelAssessmentScreen> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   List<Question> _questions = [];
-  Map<int, int> _answers = {};
+  final Map<int, int> _answers = {};
 
   @override
   void initState() {
@@ -123,10 +123,10 @@ class _StressLevelAssessmentScreenState extends State<StressLevelAssessmentScree
                   padding: const EdgeInsets.all(16.0),
                   child: ElevatedButton(
                     onPressed: _calculateScore,
-                    child: const Text("Submit Assessment"),
                     style: ElevatedButton.styleFrom(
                       minimumSize: const Size.fromHeight(50),
                     ),
+                    child: const Text("Submit Assessment"),
                   ),
                 ),
               ],

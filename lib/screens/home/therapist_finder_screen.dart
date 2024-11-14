@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:galini/screens/home/therapist_profile_screen.dart';
 
 class TherapistFinderScreen extends StatelessWidget {
   const TherapistFinderScreen({super.key});
@@ -63,16 +62,16 @@ class TherapistFinderScreen extends StatelessWidget {
       trailing: const Icon(Icons.arrow_forward_ios),
       onTap: () {
         // Navigate to the therapist profile page
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => TherapistProfileScreen(
-              name: name,
-              specialty: specialty,
-              location: location,
-            ),
-          ),
-        );
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => TherapistProfileScreen(
+        //       name: name,
+        //       specialty: specialty,
+        //       location: location,
+        //     ),
+        //   ),
+        // );
       },
     );
   }

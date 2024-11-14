@@ -54,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Padding(
           padding: const EdgeInsets.all(6.0),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Column(
                 mainAxisSize: MainAxisSize.min,
@@ -62,7 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   const Text("Welcome,", style: TextStyle(fontSize: 14, color: Colors.grey)),
                   Text(
-                    "$userName",
+                    userName,
                     style: const TextStyle(
                         fontSize: 30,
                         fontWeight: FontWeight.w500,
@@ -71,9 +71,23 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ],
               ),
+              const SizedBox(width: 115),
               const CircleAvatar(
                 radius: 25,
                 backgroundImage: AssetImage("images/doctor1.jpg"),
+              ),
+              // Notification Icon
+              IconButton(
+                icon: const Icon(Icons.notifications, color: Colors.black),
+                onPressed: () {
+                  // Navigate to the notifications screen or show a dialog
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (context) => const NotificationsScreen(),
+                  //   ),
+                  // );
+                },
               ),
               InkWell(
               onTap: () {
@@ -140,21 +154,19 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           );
                         },
-                        icon: Icons.local_hospital,
+                        icon: Icons.calendar_today,
                         iconColor: const Color.fromARGB(255, 103, 164, 245),
-                        title: "Clinic Visit",
-                        subtitle: "Make an",
-                        subtitle2: "appointment",
+                        title: "Book",
+                        subtitle: "Appointment",
                         backgroundColor: const Color.fromARGB(255, 103, 164, 245),
                       ),
                       _buildVisitCard(
                         context: context,
                         onTap: () {},
-                        icon: Icons.video_call,
+                        icon: Icons.quiz,
                         iconColor: const Color.fromARGB(255, 103, 164, 245),
-                        title: "Virtual Visit",
-                        subtitle: "Consult",
-                        subtitle2: "a doctor",
+                        title: "Self",
+                        subtitle: "Assessment",
                         backgroundColor: Colors.white, // FDFCDE
                         textColor: Colors.black,
                       ),
@@ -223,11 +235,10 @@ class _HomeScreenState extends State<HomeScreen> {
     required Color iconColor,
     required String title,
     required String subtitle,
-    required String subtitle2,
     required Color backgroundColor,
     Color textColor = Colors.white,
     double width = 160,
-    double height = 175,
+    double height = 160,
   }) {
     return InkWell(
       onTap: onTap,
@@ -246,44 +257,40 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.circle,
+        child: Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  icon,
+                  color: iconColor,
+                  size: 35,
+                ),
               ),
-              child: Icon(
-                icon,
-                color: iconColor,
-                size: 35,
+              const SizedBox(height: 5),
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 18,
+                  color: textColor,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
-            ),
-            const SizedBox(height: 5),
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: 18,
-                color: textColor,
-                fontWeight: FontWeight.w500,
+              //const SizedBox(height: 5),
+              Text(
+                subtitle,
+                style: TextStyle(
+                  color: textColor.withOpacity(0.7),
+                ),
               ),
-            ),
-            //const SizedBox(height: 5),
-            Text(
-              subtitle,
-              style: TextStyle(
-                color: textColor.withOpacity(0.7),
-              ),
-            ),
-            Text(
-              subtitle2,
-              style: TextStyle(
-                color: textColor.withOpacity(0.7),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

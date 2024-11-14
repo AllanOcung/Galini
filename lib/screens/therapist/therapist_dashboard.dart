@@ -5,6 +5,8 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -15,14 +17,16 @@ class MyApp extends StatelessWidget {
 }
 
 class TherapistDashboard extends StatelessWidget {
+  const TherapistDashboard({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Good Morning, Rodney', style: TextStyle(fontSize: 18)),
+        title: const Text('Good Morning, Rodney', style: TextStyle(fontSize: 18)),
         actions: [
           IconButton(
-            icon: Icon(Icons.notifications_none),
+            icon: const Icon(Icons.notifications_none),
             onPressed: () {},
           ),
         ],
@@ -35,16 +39,16 @@ class TherapistDashboard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'Monday, April 21',
               style: TextStyle(fontSize: 16, color: Colors.grey),
             ),
-            SizedBox(height: 16),
-            Text(
+            const SizedBox(height: 16),
+            const Text(
               "Today's Agenda",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -52,7 +56,7 @@ class TherapistDashboard extends StatelessWidget {
                 _buildAgendaCard('04', 'Rescheduled', Icons.refresh, Colors.purple),
               ],
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -60,9 +64,16 @@ class TherapistDashboard extends StatelessWidget {
                 _buildAgendaCard('\$45k', "Today's Income", Icons.attach_money, Colors.green),
               ],
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {},
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.grey[800],
+                padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -70,26 +81,19 @@ class TherapistDashboard extends StatelessWidget {
                   Icon(Icons.arrow_forward),
                 ],
               ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.grey[800],
-                padding: EdgeInsets.symmetric(vertical: 16, horizontal: 20),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
             ),
-            SizedBox(height: 16),
-            Text(
+            const SizedBox(height: 16),
+            const Text(
               "Today's Upcoming Patients (06)",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             _buildPatientCard('Joan Johnson', '10:15 - 11:00 am', 'Extreme Stress, Schizophrenia'),
           ],
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: [
+        items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Patients'),
           BottomNavigationBarItem(icon: Icon(Icons.inbox), label: 'Inbox'),
@@ -107,7 +111,7 @@ class TherapistDashboard extends StatelessWidget {
   Widget _buildAgendaCard(String count, String label, IconData icon, Color color) {
     return Expanded(
       child: Container(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: Colors.grey[900],
           borderRadius: BorderRadius.circular(8),
@@ -116,15 +120,15 @@ class TherapistDashboard extends StatelessWidget {
           children: [
             Text(
               count,
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(icon, color: color),
-                SizedBox(width: 4),
-                Text(label, style: TextStyle(color: Colors.white)),
+                const SizedBox(width: 4),
+                Text(label, style: const TextStyle(color: Colors.white)),
               ],
             ),
           ],
@@ -135,7 +139,7 @@ class TherapistDashboard extends StatelessWidget {
 
   Widget _buildPatientCard(String name, String time, String condition) {
     return Container(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.grey[850],
         borderRadius: BorderRadius.circular(8),
@@ -144,20 +148,20 @@ class TherapistDashboard extends StatelessWidget {
         children: [
           CircleAvatar(
             backgroundColor: Colors.blue,
-            child: Text(name[0], style: TextStyle(color: Colors.white)),
+            child: Text(name[0], style: const TextStyle(color: Colors.white)),
           ),
-          SizedBox(width: 16),
+          const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(name, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                Text(time, style: TextStyle(color: Colors.grey)),
-                Text(condition, style: TextStyle(color: Colors.blueAccent)),
+                Text(name, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                Text(time, style: const TextStyle(color: Colors.grey)),
+                Text(condition, style: const TextStyle(color: Colors.blueAccent)),
               ],
             ),
           ),
-          Icon(Icons.calendar_today, color: Colors.grey),
+          const Icon(Icons.calendar_today, color: Colors.grey),
         ],
       ),
     );

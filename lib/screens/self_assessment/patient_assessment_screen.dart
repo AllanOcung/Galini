@@ -13,7 +13,7 @@ class PatientAssessmentScreen extends StatefulWidget {
 class _PatientAssessmentScreenState extends State<PatientAssessmentScreen> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   List<Question> _questions = [];
-  Map<int, int> _selectedAnswers = {};
+  final Map<int, int> _selectedAnswers = {};
 
   @override
   void initState() {
@@ -130,10 +130,10 @@ class _PatientAssessmentScreenState extends State<PatientAssessmentScreen> {
                   padding: const EdgeInsets.all(16.0),
                   child: ElevatedButton(
                     onPressed: _selectedAnswers.length == _questions.length ? _submitAssessment : null,
-                    child: const Text("Submit Assessment"),
                     style: ElevatedButton.styleFrom(
                       minimumSize: const Size.fromHeight(50),
                     ),
+                    child: const Text("Submit Assessment"),
                   ),
                 ),
               ],

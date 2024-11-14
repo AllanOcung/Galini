@@ -92,7 +92,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                 children: [
                   const Text("Welcome Back,", style: TextStyle(fontSize: 14, color: Colors.grey)),
                   Text(
-                    "$userName",
+                    userName,
                     style: GoogleFonts.lobster(
                       textStyle: const TextStyle(
                         fontSize: 30,

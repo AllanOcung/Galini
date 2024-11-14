@@ -12,7 +12,7 @@ class QuestionDisplayScreen extends StatefulWidget {
 class _QuestionDisplayScreenState extends State<QuestionDisplayScreen> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   List<Question> _questions = [];
-  Map<int, int> _answers = {};
+  final Map<int, int> _answers = {};
 
   @override
   void initState() {

@@ -56,7 +56,7 @@ class _DepressionAssessmentScreenState extends State<DepressionAssessmentScreen>
     ),
   ];
 
-  Map<int, int> _answers = {};
+  final Map<int, int> _answers = {};
 
   void _calculateScore() {
     // Check if all questions have been answered

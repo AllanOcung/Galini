@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class TherapistManagementScreen extends StatefulWidget {
+  const TherapistManagementScreen({super.key});
+
   @override
   _TherapistManagementScreenState createState() => _TherapistManagementScreenState();
 }
@@ -45,7 +47,7 @@ class _TherapistManagementScreenState extends State<TherapistManagementScreen> {
           .collection('therapistTimeSlots')
           .doc(currentUser!.uid)
           .set({'timeSlots': availableTimeSlots});
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Time slots saved successfully!")));
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Time slots saved successfully!")));
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Failed to save time slots: $e")));
     }
@@ -65,12 +67,12 @@ Future<void> setAvailability() async {
 
     try {
       await dateRef.set({'timeSlots': selectedTimeSlots});
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Availability set successfully!")));
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Availability set successfully!")));
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Failed to set availability: $e")));
     }
   } else {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Please select a date and time slots.")));
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Please select a date and time slots.")));
   }
 }
 
@@ -81,7 +83,7 @@ Future<void> setAvailability() async {
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(Duration(days: 30)),
+      lastDate: DateTime.now().add(const Duration(days: 30)),
     );
     if (picked != null && picked != selectedDate) {
       setState(() {
@@ -96,7 +98,7 @@ Future<void> setAvailability() async {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text("Appointments"),
+        title: const Text("Appointments"),
         backgroundColor: const Color(0xFFBDDDFC),
       ),
       body: Padding(
@@ -104,10 +106,10 @@ Future<void> setAvailability() async {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Manage Default Time Slots", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const Text("Manage Default Time Slots", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             TextField(
               controller: timeSlotController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Enter Time Slot (e.g., 10:00 AM - 11:00 AM)',
               ),
             ),
@@ -121,7 +123,7 @@ Future<void> setAvailability() async {
                   });
                 }
               },
-              child: Text("Add Time Slot"),
+              child: const Text("Add Time Slot"),
             ),
             Wrap(
               spacing: 8,
@@ -138,10 +140,10 @@ Future<void> setAvailability() async {
             ),
             ElevatedButton(
               onPressed: saveDefaultTimeSlots,
-              child: Text("Save Default Time Slots"),
+              child: const Text("Save Default Time Slots"),
             ),
-            Divider(),
-            Text("Set Daily Availability", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const Divider(),
+            const Text("Set Daily Availability", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             ElevatedButton(
               onPressed: () => _selectDate(context),
               child: Text(selectedDate == null ? 'Select Date' : selectedDate.toString().substring(0, 10)),
@@ -164,11 +166,11 @@ Future<void> setAvailability() async {
                 );
               }).toList(),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Center(
               child: ElevatedButton(
                 onPressed: setAvailability,
-                child: Text("Set Availability for Selected Date"),
+                child: const Text("Set Availability for Selected Date"),
               ),
             ),
           ],

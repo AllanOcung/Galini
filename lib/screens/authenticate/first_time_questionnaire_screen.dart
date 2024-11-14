@@ -56,9 +56,9 @@ class _FirstTimeQuestionnaireScreenState extends State<FirstTimeQuestionnaireScr
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF2E3B55),
+      backgroundColor: const Color(0xFF2E3B55),
       appBar: AppBar(
-        backgroundColor: Color(0xFF2E3B55),
+        backgroundColor: const Color(0xFF2E3B55),
         elevation: 0,
       ),
       body: Padding(
@@ -100,7 +100,7 @@ class _FirstTimeQuestionnaireScreenState extends State<FirstTimeQuestionnaireScr
             ElevatedButton(
               onPressed: selectedOptions.isNotEmpty ? saveSelections : null,
               style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFF67A4F5),
+                backgroundColor: const Color(0xFF67A4F5),
                 padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 40),
               ),
               child: const Text(

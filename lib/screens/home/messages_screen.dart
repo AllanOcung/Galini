@@ -59,11 +59,11 @@ class MessagesScreen extends StatelessWidget {
       future: _fetchMessages(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         }
 
         if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return Center(child: Text("No messages yet"));
+          return const Center(child: Text("No messages yet"));
         }
 
         return SingleChildScrollView(
@@ -120,7 +120,7 @@ class MessagesScreen extends StatelessWidget {
                     ),
                     title: Text(
                       chat['therapistName'],
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
@@ -129,14 +129,14 @@ class MessagesScreen extends StatelessWidget {
                       chat['lastMessage'],
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 16,
                         color: Colors.black54,
                       ),
                     ),
                     trailing: Text(
                       formattedTime,
-                      style: TextStyle(fontSize: 15, color: Colors.black54),
+                      style: const TextStyle(fontSize: 15, color: Colors.black54),
                     ),
                   );
                 },

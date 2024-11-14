@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:galini/widgets/completed_schedule.dart';
 import 'package:galini/widgets/upcoming_schedule.dart';
 
 class ScheduleScreen extends StatefulWidget {
@@ -13,8 +14,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
 
   final _scheduleWidgets = [
     const UpcomingSchedule(),
-    Container(),
-    Container(),
+    const CompletedSchedule(),
   ];
   @override
   Widget build(BuildContext context) {
@@ -55,7 +55,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                     padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 25),
                     decoration: BoxDecoration(
                       color: _buttonIndex == 0
-                          ? const Color.fromARGB(255, 51, 172, 92)
+                          ? const Color.fromARGB(255, 103, 164, 245)
                           : Colors.transparent,
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -80,7 +80,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                     padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 25),
                     decoration: BoxDecoration(
                       color: _buttonIndex == 1
-                          ? const Color.fromARGB(255, 51, 172, 92)
+                          ? const Color.fromARGB(255, 103, 164, 245)
                           : Colors.transparent,
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -95,35 +95,10 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                     ),
                   ),
                 ),
-                InkWell(
-                  onTap: () {
-                    setState(() {
-                      _buttonIndex = 2;
-                    });
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 25),
-                    decoration: BoxDecoration(
-                      color: _buttonIndex == 2
-                          ? const Color.fromARGB(255, 51, 172, 92)
-                          : Colors.transparent,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    // child: Text(
-                    //   "Completed",
-                    //   style: TextStyle(
-                    //     fontSize: 16,
-                    //     fontWeight: FontWeight.w500,
-                    //     color:
-                    //         _buttonIndex == 2 ? Colors.white : Colors.black38,
-                    //   ),
-                    // ),
-                  ),
-                ),
               ],
             ),
           ),
-          const SizedBox(height: 30),
+          const SizedBox(height: 10),
           // Widgets According to buttons
           _scheduleWidgets[_buttonIndex]
         ],

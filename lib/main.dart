@@ -1,5 +1,6 @@
 //import the Firebase core plugin and the configuration file
 import 'package:firebase_core/firebase_core.dart';
+import 'package:galini/Services/firebase_api.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 import 'package:galini/Services/auth.dart';
@@ -14,6 +15,7 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await FirebaseApi().initNotifications();
   runApp(const MyApp());
 }
 
