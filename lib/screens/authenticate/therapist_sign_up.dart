@@ -26,6 +26,7 @@ class _TherapistSignUpScreenState extends State<TherapistSignUpScreen> {
   String location = '';
   String phoneNumber = '';
   //String selectedRole = 'therapist'; // Default role is 'therapist'
+  
 
 
   // This method shows a dialog in case of success or failure
@@ -70,250 +71,282 @@ class _TherapistSignUpScreenState extends State<TherapistSignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.white,
-      child: SingleChildScrollView(
-        child: SafeArea(
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                const SizedBox(height: 10),
-                Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Image.asset(
-                    "images/doctors.png",
-                    width: 150,
-                    height: 150,
-                  ),
-                ),
-                // Name
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-                  child: TextFormField(
-                    decoration: const InputDecoration(
-                      labelText: "Full Name",
-                      border: OutlineInputBorder(),
-                      prefixIcon: Icon(Icons.person),
+    return Scaffold(
+      backgroundColor: Colors.white,
+      resizeToAvoidBottomInset: true, // Allows the layout to adjust for the keyboard
+      body: Material(
+        color: Colors.white,
+        child: SingleChildScrollView(
+          child: SafeArea(
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  const SizedBox(height: 10),
+                  Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Image.asset(
+                      "images/doctors.png",
+                      width: 150,
+                      height: 150,
                     ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your full name';
-                      }
-                      return null;
-                    },
-                    onSaved: (value) {
-                      name = value!;
-                    },
                   ),
-                ),
-                // Email
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-                  child: TextFormField(
-                    decoration: const InputDecoration(
-                      labelText: "Email Address",
-                      border: OutlineInputBorder(),
-                      prefixIcon: Icon(Icons.email),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your email';
-                      } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-                        return 'Please enter a valid email';
-                      }
-                      return null;
-                    },
-                    onSaved: (value) {
-                      email = value!;
-                    },
-                  ),
-                ),
-                // Phone
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-                  child: TextFormField(
-                    decoration: const InputDecoration(
-                      labelText: "Phone Number",
-                      border: OutlineInputBorder(),
-                      prefixIcon: Icon(Icons.phone),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your phone number';
-                      }
-                      return null;
-                    },
-                    onSaved: (value) {
-                      phoneNumber = value!;
-                    },
-                  ),
-                ),
-                // Location
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-                  child: TextFormField(
-                    decoration: const InputDecoration(
-                      labelText: "Location",
-                      border: OutlineInputBorder(),
-                      prefixIcon: Icon(Icons.work),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your location';
-                      }
-                      return null;
-                    },
-                    onSaved: (value) {
-                      location = value!;
-                    },
-                  ),
-                ),
-                // Experience
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-                  child: TextFormField(
-                    decoration: const InputDecoration(
-                      labelText: "Experience (in years)",
-                      border: OutlineInputBorder(),
-                      prefixIcon: Icon(Icons.timeline),
-                    ),
-                    onSaved: (value) {
-                      experience = value!;
-                    },
-                  ),
-                ),
-                // Qualifications
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-                  child: TextFormField(
-                    decoration: const InputDecoration(
-                      labelText: "About",
-                      border: OutlineInputBorder(),
-                      prefixIcon: Icon(Icons.school),
-                    ),
-                    onSaved: (value) {
-                      qualifications = value!;
-                    },
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-                  child: TextFormField(
-                    obscureText: passToggle,
-                    decoration: InputDecoration(
-                      border: const OutlineInputBorder(),
-                      label: const Text("Enter Password"),
-                      prefixIcon: const Icon(Icons.lock),
-                      suffixIcon: InkWell(
-                        onTap: () {
-                          setState(() {
-                            passToggle = !passToggle;
-                          });
-                        },
-                        child: passToggle
-                            ? const Icon(CupertinoIcons.eye_slash_fill)
-                            : const Icon(CupertinoIcons.eye_fill),
+                  // Name
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                        labelText: "Full Name",
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10),),
+                        prefixIcon: const Icon(Icons.person),
+                        focusedBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.blue, width: 2, ),
+                        borderRadius: BorderRadius.circular(10), // Focused border color
                       ),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your password';
-                      } else if (value.length < 6) {
-                        return 'Password must be at least 6 characters';
-                      }
-                      return null;
-                    },
-                    onSaved: (value) {
-                      password = value!;
-                    },
-                  ),
-                ),
-                const SizedBox(height: 20),
-                isLoading
-                  ? const Center(child: CircularProgressIndicator())
-                  : InkWell(
-                      onTap: () async {
-                        if (_formKey.currentState!.validate()) {
-                          _formKey.currentState!.save();
-                          setState(() => isLoading = true); // Start loading
-
-                          try {
-                            // Call the async register function and await completion
-                            await registerTherapist();
-
-                            // Navigate to the welcome screen if successful
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(builder: (context) => const WelcomeScreen()),
-                            );
-                          } catch (error) {
-                            // Show error dialog if registration fails
-                            _showDialog("Registration Failed", error.toString());
-                          } finally {
-                            setState(() => isLoading = false); // Stop loading
-                          }
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your full name';
                         }
+                        return null;
                       },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        width: 330,
-                        decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 103, 164, 245),
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Colors.black12,
-                              blurRadius: 4,
-                              spreadRadius: 2,
-                            ),
-                          ],
+                      onSaved: (value) {
+                        name = value!;
+                      },
+                    ),
+                  ),
+                  // Email
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                        labelText: "Email Address",
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10),),
+                        prefixIcon: const Icon(Icons.email),
+                        focusedBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.blue, width: 2, ),
+                        borderRadius: BorderRadius.circular(10), // Focused border color
+                      ),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your email';
+                        } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                          return 'Please enter a valid email';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) {
+                        email = value!;
+                      },
+                    ),
+                  ),
+                  // Phone
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                        labelText: "Phone Number",
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10),),
+                        prefixIcon: const Icon(Icons.phone),
+                        focusedBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.blue, width: 2, ),
+                        borderRadius: BorderRadius.circular(10), // Focused border color
+                      ),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your phone number';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) {
+                        phoneNumber = value!;
+                      },
+                    ),
+                  ),
+                  // Location
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                        labelText: "Location",
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10),),
+                        prefixIcon: const Icon(Icons.work),
+                        focusedBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.blue, width: 2, ),
+                        borderRadius: BorderRadius.circular(10), // Focused border color
+                      ),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your location';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) {
+                        location = value!;
+                      },
+                    ),
+                  ),
+                  // Experience
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                        labelText: "Experience (in years)",
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10),),
+                        prefixIcon: const Icon(Icons.timeline),
+                        focusedBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.blue, width: 2, ),
+                        borderRadius: BorderRadius.circular(10), // Focused border color
+                      ),
+                      ),
+                      onSaved: (value) {
+                        experience = value!;
+                      },
+                    ),
+                  ),
+                  // Qualifications
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                        labelText: "About",
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10),),
+                        prefixIcon: const Icon(Icons.school),
+                        focusedBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.blue, width: 2, ),
+                        borderRadius: BorderRadius.circular(10), // Focused border color
+                      ),
+                      ),
+                      onSaved: (value) {
+                        qualifications = value!;
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+                    child: TextFormField(
+                      obscureText: passToggle,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10),),
+                        focusedBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.blue, width: 2, ),
+                        borderRadius: BorderRadius.circular(10), // Focused border color
+                      ),
+                        label: const Text("Enter Password"),
+                        prefixIcon: const Icon(Icons.lock),
+                        suffixIcon: InkWell(
+                          onTap: () {
+                            setState(() {
+                              passToggle = !passToggle;
+                            });
+                          },
+                          child: passToggle
+                              ? const Icon(CupertinoIcons.eye_slash_fill)
+                              : const Icon(CupertinoIcons.eye_fill),
                         ),
-                        child: const Center(
-                          child: Text(
-                            "Create account",
-                            style: TextStyle(
-                              fontSize: 22,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600,
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your password';
+                        } else if (value.length < 6) {
+                          return 'Password must be at least 6 characters';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) {
+                        password = value!;
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  isLoading
+                    ? const Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),))
+                    : InkWell(
+                        onTap: () async {
+                          if (_formKey.currentState!.validate()) {
+                            _formKey.currentState!.save();
+                            setState(() => isLoading = true); // Start loading
+      
+                            try {
+                              // Call the async register function and await completion
+                              await registerTherapist();
+      
+                              // Navigate to the welcome screen if successful
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(builder: (context) => const WelcomeScreen()),
+                              );
+                            } catch (error) {
+                              // Show error dialog if registration fails
+                              _showDialog("Registration Failed", error.toString());
+                            } finally {
+                              setState(() => isLoading = false); // Stop loading
+                            }
+                          }
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          width: 330,
+                          decoration: BoxDecoration(
+                            color: const Color.fromARGB(255, 103, 164, 245),
+                            borderRadius: BorderRadius.circular(10),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Colors.black12,
+                                blurRadius: 4,
+                                spreadRadius: 2,
+                              ),
+                            ],
+                          ),
+                          child: const Center(
+                            child: Text(
+                              "Sign up",
+                              style: TextStyle(
+                                fontSize: 22,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      "Already have an account?",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black,
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const LoginScreen(),
-                          ),
-                        );
-                      },
-                      child: const Text(
-                        "Log In",
+      
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        "Already have an account?",
                         style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Color.fromARGB(255, 103, 164, 245),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black,
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const LoginScreen(),
+                            ),
+                          );
+                        },
+                        child: const Text(
+                          "Sign In",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Color.fromARGB(255, 103, 164, 245),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
