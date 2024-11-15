@@ -10,6 +10,16 @@ import '../appointments/therapist_appointment _management_screen.dart';
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
+  // Fetch the count of active patients with 'approved' status
+  Future<int> _getActivePatientsCount() async {
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('appointments')
+        .where('status', isEqualTo: 'approved') // Query for approved status
+        .get();
+    
+    return querySnapshot.docs.length; // Return the count of approved appointments
+  }
+
   String _getGreeting() {
     final hour = DateTime.now().hour;
     if (hour < 12) {
@@ -71,12 +81,21 @@ class HomeScreen extends StatelessWidget {
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
               ),
               const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  _buildOverviewCard("12", "Active Patients", Colors.white, Icons.person),
-                  _buildOverviewCard("04", "Rescheduled", Colors.white, Icons.refresh),
-                ],
+              FutureBuilder<int>(
+                future: _getActivePatientsCount(),
+                builder: (context, snapshot) {
+                  String activePatientsCount = '0';
+                  if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
+                    activePatientsCount = snapshot.data.toString();
+                  }
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      _buildOverviewCard(activePatientsCount, "Active Patients", Colors.white, Icons.person),
+                      _buildOverviewCard("04", "Rescheduled", Colors.white, Icons.refresh),
+                    ],
+                  );
+                },
               ),
               const SizedBox(height: 16),
               Container(

@@ -46,7 +46,7 @@ class RoleSelectionScreen extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(vertical: 15, horizontal: 60),
                   child: const Text(
-                    "Regular User",
+                    "Patient",
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 20,

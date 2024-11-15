@@ -15,41 +15,16 @@ class WelcomeScreen extends StatelessWidget {
         padding: const EdgeInsets.all(10),
         child: Column(
           children: [
-            const SizedBox(
-              height: 30,
-            ),
-            Align(
-              alignment: Alignment.centerRight,
-              child: TextButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const LoginScreen(),
-                      ));
-                },
-                child: const Text(
-                  "SKIP",
-                  style: TextStyle(
-                    color: Color.fromARGB(255, 103, 164, 245),
-                    fontSize: 20,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
+            const SizedBox(height: 60),           
             Padding(
-              padding: const EdgeInsets.all(10),
-              
+              padding: const EdgeInsets.all(10),             
               child: Image.asset(
                 "images/doctors.png",
                  width: 150,
                  height: 150,
                 ),
             ),
-            const SizedBox(height: 30),
+            const SizedBox(height: 10),
             const Text(
               "Galini",
               style: TextStyle(
@@ -60,18 +35,30 @@ class WelcomeScreen extends StatelessWidget {
                 wordSpacing: 2,
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 10),           
             const Text(
-              "Your Mental Health Companion",
+              "Empathy at your fingertips",
               style: TextStyle(
                 color: Colors.black54,
                 fontSize: 18,
                 fontWeight: FontWeight.w500,
-                letterSpacing: 1.0,
-                fontStyle: FontStyle.italic,
+                //fontStyle: FontStyle.italic,
               ),
             ),
-            const SizedBox(height: 60),
+            const SizedBox(height: 10),
+            // Brief Intro
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 25),
+                  child: Text(
+                    "''Discover tools and connect with therapists to help you on your mental health journey. Let's heal together.''",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.black54,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 40),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -90,7 +77,7 @@ class WelcomeScreen extends StatelessWidget {
                       padding:
                           const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
                       child: const Text(
-                        "Log In",
+                        "Sign In",
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 22,
@@ -125,8 +112,22 @@ class WelcomeScreen extends StatelessWidget {
                     ),
                   ),
                 ),
+                
               ],
             ),
+            const Spacer(),
+                // Privacy Assurance
+                const Padding(
+                  padding: EdgeInsets.only(bottom: 20),
+                  child: Text(
+                    "Your data is secure and private with us.",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.black54,
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
           ],
         ),
       ),

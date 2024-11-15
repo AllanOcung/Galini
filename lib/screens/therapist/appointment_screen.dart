@@ -74,11 +74,20 @@ class _TherapistAppointmentsScreenState
               padding: const EdgeInsets.all(5),
               margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
               decoration: BoxDecoration(
-                color: const Color(0xFFF4F6FA),
+                color: Colors.white,
                 borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.3), // Shadow color
+                    spreadRadius: 2, // Spread radius
+                    blurRadius: 5, // Blur radius
+                    offset: const Offset(0, 3), // Shadow offset
+                  ),
+                ],
               ),
               child: ListTile(
-                contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                 title: Text(
                   '${appointment['patientName']}',
                   style: const TextStyle(
@@ -101,7 +110,7 @@ class _TherapistAppointmentsScreenState
                         children: [
                           IconButton(
                             icon: const Icon(Icons.check),
-                            color: const Color.fromARGB(255, 51, 172, 92),
+                            color: const Color(0xFF7D99AA),
                             onPressed: () => _approveAppointment(
                                 appointment['appointmentId']),
                           ),
@@ -125,7 +134,7 @@ class _TherapistAppointmentsScreenState
                               ),
                               IconButton(
                                 icon: const Icon(Icons.done),
-                                color: Colors.blue,
+                                color: const Color(0xFF7D99AA),
                                 onPressed: () => _markAppointmentComplete(
                                     appointment['appointmentId']),
                               ),
@@ -151,9 +160,10 @@ class _TherapistAppointmentsScreenState
     }
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Center(child: Text("Appointments")),
-        backgroundColor: const Color(0xFFBDDDFC),
+        backgroundColor: const Color(0xFF7D99AA),
         automaticallyImplyLeading: false,
       ),
       body: Column(
@@ -172,10 +182,10 @@ class _TherapistAppointmentsScreenState
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: selectedCategory == 'Pending'
-                        ? Colors.blue
+                        ? const Color(0xFF293325)
                         : Colors.grey,
                   ),
-                  child: const Text("Pending"),
+                  child: const Text("Pending", style: TextStyle(color: Colors.white),),
                 ),
                 ElevatedButton(
                   onPressed: () {
@@ -185,10 +195,10 @@ class _TherapistAppointmentsScreenState
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: selectedCategory == 'Upcoming'
-                        ? Colors.blue
+                        ? const Color(0xFF293325)
                         : Colors.grey,
                   ),
-                  child: Text("Upcoming"),
+                  child: const Text("Upcoming", style: TextStyle(color: Colors.white),),
                 ),
                 ElevatedButton(
                   onPressed: () {
@@ -198,10 +208,10 @@ class _TherapistAppointmentsScreenState
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: selectedCategory == 'Completed'
-                        ? Colors.blue
+                        ? const Color(0xFF293325)
                         : Colors.grey,
                   ),
-                  child: const Text("Completed"),
+                  child: const Text("Completed", style: TextStyle(color: Colors.white),),
                 ),
               ],
             ),
