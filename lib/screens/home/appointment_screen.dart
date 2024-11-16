@@ -2,8 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:galini/screens/appointments/patient_appointment2_screen.dart';
-import 'package:galini/screens/appointments/patient_appointment_screen.dart';
-import 'package:galini/screens/home/chat_screen.dart';
+import 'package:galini/screens/home/patient_chat_screen.dart';
 
 class AppointmentScreen extends StatelessWidget {
   final String therapistId; // Pass the therapist's document ID when navigating to this screen
@@ -115,9 +114,7 @@ class AppointmentScreen extends StatelessWidget {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) => ChatScreen(
-                                            //conversationId: conversationId,
-                                            currentUserId: currentUserId,
+                                          builder: (context) => PatientChatScreen(
                                             therapistId: therapistId,
                                           ),
                                         ),

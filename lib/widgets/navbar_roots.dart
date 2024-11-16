@@ -68,7 +68,7 @@ class _NavBarRootsState extends State<NavBarRoots> {
   Widget build(BuildContext context) {
     // Update the second screen to pass the user ID if available
     if (_userId != null) {
-      _screens[1] = MessagesScreen(currentUserId: _userId!); // Pass the user ID
+      _screens[1] = const MessagesScreen(); // Pass the user ID
     }
 
     return Scaffold(
