@@ -53,50 +53,65 @@ class SplashWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     final user = Provider.of<CustomUser?>(context);
 
-    return AnimatedSplashScreen(
-      splash: const Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            'Galini',
-            style: TextStyle(
-              fontSize: 40,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
+    return Stack(
+      children: [
+        // Background color with overlay
+        Container(
+          color: const Color.fromARGB(255, 103, 164, 245), // Background color
+        ),
+        // Overlay with darker filter
+        Container(
+          color: Colors.black.withOpacity(0.1), // Darker overlay with 50% opacity
+        ),
+        // Animated splash content
+        Positioned.fill(
+          child: AnimatedSplashScreen(
+            splash: const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Galini',
+                  style: TextStyle(
+                    fontSize: 45,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
             ),
+            splashTransition: SplashTransition.fadeTransition,
+            animationDuration: const Duration(milliseconds: 800),
+            nextScreen: user == null
+                ? const WelcomeScreen()
+                : FutureBuilder<String>(
+                    future: getUserRole(user.uid), // Check role dynamically
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (snapshot.hasError || !snapshot.hasData) {
+                        return const WelcomeScreen(); // Fallback in case of error
+                      } else {
+                        switch (snapshot.data) {
+                          case 'user':
+                            return const NavBarRoots();
+                          case 'therapist':
+                            return const NavBarRoot();
+                          case 'admin':
+                            return const AdminNavBar();
+                          default:
+                            return const WelcomeScreen(); // Fallback for unknown roles
+                        }
+                      }
+                    },
+                  ),
+            backgroundColor: Colors.transparent, // Transparent background
           ),
-        ],
-      ),
-      backgroundColor: const Color.fromARGB(255, 103, 164, 245),
-      duration: 3000,
-      splashTransition: SplashTransition.fadeTransition,
-      animationDuration: const Duration(milliseconds: 800),
-      nextScreen: user == null
-          ? const WelcomeScreen()
-          : FutureBuilder<String>(
-              future: getUserRole(user.uid), // Check role dynamically
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError || !snapshot.hasData) {
-                  return const WelcomeScreen(); // Fallback in case of error
-                } else {
-                  switch (snapshot.data) {
-                    case 'user':
-                      return const NavBarRoots();
-                    case 'therapist':
-                      return const NavBarRoot();
-                    case 'admin':
-                      return const AdminNavBar();
-                    default:
-                      return const WelcomeScreen(); // Fallback for unknown roles
-                  }
-                }
-              },
-            ),
+        ),
+      ],
     );
   }
 }
+
 
 
 Future<String> getUserRole(String uid) async {

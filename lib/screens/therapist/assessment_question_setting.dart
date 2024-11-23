@@ -70,8 +70,16 @@ class _TherapistQuestionSettingScreenState extends State<TherapistQuestionSettin
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text("Assessment Questions"),
+        title: const Text(
+          "Assessment Questions",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+            color: Colors.white,
+          ),
+          ),
         backgroundColor: const Color(0xFF7D99AA),
       ),
       body: Padding(
@@ -94,10 +102,18 @@ class _TherapistQuestionSettingScreenState extends State<TherapistQuestionSettin
               children: [
                 ElevatedButton(
                   onPressed: _addQuestion,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF7D99AA), // Change to your desired color
+                    foregroundColor: Colors.white, // Text color
+                  ),
                   child: const Text("Add Question"),
                 ),
                 ElevatedButton(
                   onPressed: _saveAssessment,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF7D99AA), // Change to your desired color
+                    foregroundColor: Colors.white, // Text color
+                  ),
                   child: const Text("Save Assessment"),
                 ),
               ],

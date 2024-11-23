@@ -29,8 +29,8 @@ class _NavBarRootsState extends State<NavBarRoot> {
   final List<Widget> _screens = [
     const HomeScreen(),
     const PatientsScreen(),
-    ChatsScreen(),
-    TherapistAppointmentsScreen(),
+    const InboxScreen(),
+    const TherapistAppointmentsScreen(),
     MoreScreen(),
   ];
 

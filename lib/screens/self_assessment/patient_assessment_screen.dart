@@ -85,6 +85,7 @@ class _PatientAssessmentScreenState extends State<PatientAssessmentScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Patient Assessment"),
+        automaticallyImplyLeading: false,
       ),
       body: _questions.isEmpty
           ? const Center(child: CircularProgressIndicator())

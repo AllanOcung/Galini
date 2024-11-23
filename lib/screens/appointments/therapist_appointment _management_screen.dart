@@ -98,16 +98,24 @@ Future<void> setAvailability() async {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text("Appointments"),
-        backgroundColor: const Color(0xFFBDDDFC),
+        title: const Text(
+          "Appointments",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+            color: Colors.white,
+          ),
+          ),
+        backgroundColor: const Color(0xFF7D99AA),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text("Manage Default Time Slots", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const Text("Manage Default Time Slots", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black54)),
             TextField(
+              style: const TextStyle(color: Colors.black),
               controller: timeSlotController,
               decoration: const InputDecoration(
                 labelText: 'Enter Time Slot (e.g., 10:00 AM - 11:00 AM)',
@@ -123,6 +131,10 @@ Future<void> setAvailability() async {
                   });
                 }
               },
+              style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF7D99AA), // Change to your desired color
+              foregroundColor: Colors.white, // Text color
+            ),
               child: const Text("Add Time Slot"),
             ),
             Wrap(
@@ -140,12 +152,20 @@ Future<void> setAvailability() async {
             ),
             ElevatedButton(
               onPressed: saveDefaultTimeSlots,
+              style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF7D99AA), // Change to your desired color
+              foregroundColor: Colors.white, // Text color
+            ),
               child: const Text("Save Default Time Slots"),
             ),
             const Divider(),
-            const Text("Set Daily Availability", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const Text("Set Daily Availability", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black54)),
             ElevatedButton(
               onPressed: () => _selectDate(context),
+              style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF7D99AA), // Change to your desired color
+              foregroundColor: Colors.white, // Text color
+            ),
               child: Text(selectedDate == null ? 'Select Date' : selectedDate.toString().substring(0, 10)),
             ),
             Wrap(
@@ -167,11 +187,13 @@ Future<void> setAvailability() async {
               }).toList(),
             ),
             const SizedBox(height: 16),
-            Center(
-              child: ElevatedButton(
-                onPressed: setAvailability,
-                child: const Text("Set Availability for Selected Date"),
-              ),
+            ElevatedButton(
+              onPressed: setAvailability,
+              style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xFF7D99AA), // Change to your desired color
+            foregroundColor: Colors.white, // Text color
+                        ),
+              child: const Text("Set Availability for Selected Date"),
             ),
           ],
         ),

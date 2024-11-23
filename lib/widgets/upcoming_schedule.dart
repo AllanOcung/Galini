@@ -113,7 +113,7 @@ class UpcomingSchedule extends StatelessWidget {
                       padding: const EdgeInsets.only(bottom: 10),
                       child: AppointmentCard(
                         doctorName: appointments[index]['therapistName'] ?? 'Unknown',
-                        specialization: appointments[index]['role'] ?? 'therapist',
+                        specialization: appointments[index]['specialty'] ?? 'therapist',
                         date: appointments[index]['appointmentDate'] ?? 'Unknown',
                         time: appointments[index]['timeSlot'] ?? 'Unknown',
                         statusColor: Colors.blue,

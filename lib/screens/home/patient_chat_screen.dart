@@ -94,7 +94,7 @@ class _ChatScreenState extends State<PatientChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFF7D99AA),
+        backgroundColor: const Color(0xFFBDDDFC),
         titleSpacing: 0,  // Removes default spacing
         title: FutureBuilder<Map<String, dynamic>>(
           future: _getUserInfo(),
@@ -184,7 +184,7 @@ class _ChatScreenState extends State<PatientChatScreen> {
                                 horizontal: 8, vertical: 4),
                             decoration: BoxDecoration(
                               color: isSentByCurrentUser
-                                  ? const Color.fromARGB(255, 180, 205, 221)
+                                  ? const Color(0xFFBDDDFC)
                                   : Colors.white,
                               borderRadius: BorderRadius.only(
                                 topLeft: const Radius.circular(12),
@@ -260,7 +260,7 @@ class _ChatScreenState extends State<PatientChatScreen> {
                       ),
                     ),
                     IconButton(
-                      icon: const Icon(Icons.send, color: Color(0xFF7D99AA)),
+                      icon: const Icon(Icons.send, color: Color.fromARGB(255, 1, 3, 5),),
                       onPressed: () {
                         if (snapshot.hasData) {
                           _sendMessage(snapshot.data!);

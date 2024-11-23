@@ -14,22 +14,21 @@ class TherapistSignUpScreen extends StatefulWidget {
 class _TherapistSignUpScreenState extends State<TherapistSignUpScreen> {
   final _formKey = GlobalKey<FormState>();
   final Authenticate _auth = Authenticate();
-  
+
   bool passToggle = true;
   bool isLoading = false;
+
+  // Form fields
   String name = '';
+  String specialty = '';
   String email = '';
-  String status = '';
+  String password = '';
   String experience = '';
   String qualifications = '';
-  String password = '';
   String location = '';
   String phoneNumber = '';
-  //String selectedRole = 'therapist'; // Default role is 'therapist'
-  
 
-
-  // This method shows a dialog in case of success or failure
+  // Helper method to show dialogs
   void _showDialog(String title, String message) {
     showDialog(
       context: context,
@@ -38,9 +37,7 @@ class _TherapistSignUpScreenState extends State<TherapistSignUpScreen> {
         content: Text(message),
         actions: <Widget>[
           TextButton(
-            onPressed: () {
-              Navigator.of(ctx).pop();
-            },
+            onPressed: () => Navigator.of(ctx).pop(),
             child: const Text("Okay"),
           ),
         ],
@@ -48,245 +45,171 @@ class _TherapistSignUpScreenState extends State<TherapistSignUpScreen> {
     );
   }
 
-    Future<void> registerTherapist() async {
-    setState(() => isLoading = true);
-    try {
-      await _auth.registerTherapist(
-        name,
-        email,
-        status,
-        password,
-        experience,
-        qualifications,
-        location,
-        phoneNumber,
-      );
-    } catch (e) {
-      _showDialog("Error", "Registration failed: ${e.toString()}");
-    } finally {
-      setState(() => isLoading = false);
+  // Async method to register therapist
+  Future<void> registerTherapist() async {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      setState(() => isLoading = true);
+
+      try {
+        await _auth.registerTherapist(
+          name,
+          specialty,
+          email,
+          'pending', // Default status
+          password,
+          experience,
+          qualifications,
+          location,
+          phoneNumber,
+        );
+
+        // Navigate to welcome screen upon successful registration
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const WelcomeScreen()),
+        );
+      } catch (error) {
+        _showDialog("Registration Failed", error.toString());
+      } finally {
+        setState(() => isLoading = false);
+      }
     }
   }
-  
+
+  // Field widget helper
+  Widget _buildField({
+    required String labelText,
+    required IconData prefixIcon,
+    required Function(String?) onSaved,
+    required String? Function(String?) validator,
+    bool obscureText = false,
+    Widget? suffixIcon,
+    TextInputType keyboardType = TextInputType.text,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+      child: TextFormField(
+        obscureText: obscureText,
+        decoration: InputDecoration(
+          labelText: labelText,
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+          prefixIcon: Icon(prefixIcon),
+          focusedBorder: OutlineInputBorder(
+            borderSide: const BorderSide(color: Colors.blue, width: 2),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          suffixIcon: suffixIcon,
+        ),
+        keyboardType: keyboardType,
+        onSaved: onSaved,
+        validator: validator,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      resizeToAvoidBottomInset: true, // Allows the layout to adjust for the keyboard
-      body: Material(
-        color: Colors.white,
+      body: SafeArea(
         child: SingleChildScrollView(
-          child: SafeArea(
-            child: Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  const SizedBox(height: 10),
-                  Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Image.asset(
-                      "images/doctors.png",
-                      width: 150,
-                      height: 150,
-                    ),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                const SizedBox(height: 10),
+                Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Image.asset(
+                    "images/doctors.png",
+                    width: 150,
+                    height: 150,
                   ),
-                  // Name
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                        labelText: "Full Name",
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10),),
-                        prefixIcon: const Icon(Icons.person),
-                        focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.blue, width: 2, ),
-                        borderRadius: BorderRadius.circular(10), // Focused border color
-                      ),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter your full name';
-                        }
-                        return null;
-                      },
-                      onSaved: (value) {
-                        name = value!;
-                      },
-                    ),
+                ),
+                _buildField(
+                  labelText: "Full Name",
+                  prefixIcon: Icons.person,
+                  onSaved: (value) => name = value!,
+                  validator: (value) =>
+                      value == null || value.isEmpty ? 'Please enter your full name' : null,
+                ),
+                _buildField(
+                  labelText: "Specialty",
+                  prefixIcon: Icons.work,
+                  onSaved: (value) => specialty = value!,
+                  validator: (value) =>
+                      value == null || value.isEmpty ? 'Please enter your specialty' : null,
+                ),
+                _buildField(
+                  labelText: "Email Address",
+                  prefixIcon: Icons.email,
+                  keyboardType: TextInputType.emailAddress,
+                  onSaved: (value) => email = value!,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your email';
+                    } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                      return 'Please enter a valid email';
+                    }
+                    return null;
+                  },
+                ),
+                _buildField(
+                  labelText: "Phone Number",
+                  prefixIcon: Icons.phone,
+                  keyboardType: TextInputType.phone,
+                  onSaved: (value) => phoneNumber = value!,
+                  validator: (value) =>
+                      value == null || value.isEmpty ? 'Please enter your phone number' : null,
+                ),
+                _buildField(
+                  labelText: "Location",
+                  prefixIcon: Icons.location_on,
+                  onSaved: (value) => location = value!,
+                  validator: (value) =>
+                      value == null || value.isEmpty ? 'Please enter your location' : null,
+                ),
+                _buildField(
+                  labelText: "Experience (in years)",
+                  prefixIcon: Icons.timeline,
+                  keyboardType: TextInputType.number,
+                  onSaved: (value) => experience = value!,
+                  validator: (value) =>
+                      value == null || value.isEmpty ? 'Please enter your experience' : null,
+                ),
+                _buildField(
+                  labelText: "About / Qualifications",
+                  prefixIcon: Icons.school,
+                  onSaved: (value) => qualifications = value!,
+                  validator: (value) =>
+                      value == null || value.isEmpty ? 'Please enter your qualifications' : null,
+                ),
+                _buildField(
+                  labelText: "Enter Password",
+                  prefixIcon: Icons.lock,
+                  obscureText: passToggle,
+                  onSaved: (value) => password = value!,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your password';
+                    } else if (value.length < 6) {
+                      return 'Password must be at least 6 characters';
+                    }
+                    return null;
+                  },
+                  suffixIcon: InkWell(
+                    onTap: () => setState(() => passToggle = !passToggle),
+                    child: Icon(passToggle ? CupertinoIcons.eye_slash_fill : CupertinoIcons.eye_fill),
                   ),
-                  // Email
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                        labelText: "Email Address",
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10),),
-                        prefixIcon: const Icon(Icons.email),
-                        focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.blue, width: 2, ),
-                        borderRadius: BorderRadius.circular(10), // Focused border color
-                      ),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter your email';
-                        } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-                          return 'Please enter a valid email';
-                        }
-                        return null;
-                      },
-                      onSaved: (value) {
-                        email = value!;
-                      },
-                    ),
-                  ),
-                  // Phone
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                        labelText: "Phone Number",
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10),),
-                        prefixIcon: const Icon(Icons.phone),
-                        focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.blue, width: 2, ),
-                        borderRadius: BorderRadius.circular(10), // Focused border color
-                      ),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter your phone number';
-                        }
-                        return null;
-                      },
-                      onSaved: (value) {
-                        phoneNumber = value!;
-                      },
-                    ),
-                  ),
-                  // Location
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                        labelText: "Location",
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10),),
-                        prefixIcon: const Icon(Icons.work),
-                        focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.blue, width: 2, ),
-                        borderRadius: BorderRadius.circular(10), // Focused border color
-                      ),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter your location';
-                        }
-                        return null;
-                      },
-                      onSaved: (value) {
-                        location = value!;
-                      },
-                    ),
-                  ),
-                  // Experience
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                        labelText: "Experience (in years)",
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10),),
-                        prefixIcon: const Icon(Icons.timeline),
-                        focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.blue, width: 2, ),
-                        borderRadius: BorderRadius.circular(10), // Focused border color
-                      ),
-                      ),
-                      onSaved: (value) {
-                        experience = value!;
-                      },
-                    ),
-                  ),
-                  // Qualifications
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                        labelText: "About",
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10),),
-                        prefixIcon: const Icon(Icons.school),
-                        focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.blue, width: 2, ),
-                        borderRadius: BorderRadius.circular(10), // Focused border color
-                      ),
-                      ),
-                      onSaved: (value) {
-                        qualifications = value!;
-                      },
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-                    child: TextFormField(
-                      obscureText: passToggle,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10),),
-                        focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.blue, width: 2, ),
-                        borderRadius: BorderRadius.circular(10), // Focused border color
-                      ),
-                        label: const Text("Enter Password"),
-                        prefixIcon: const Icon(Icons.lock),
-                        suffixIcon: InkWell(
-                          onTap: () {
-                            setState(() {
-                              passToggle = !passToggle;
-                            });
-                          },
-                          child: passToggle
-                              ? const Icon(CupertinoIcons.eye_slash_fill)
-                              : const Icon(CupertinoIcons.eye_fill),
-                        ),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter your password';
-                        } else if (value.length < 6) {
-                          return 'Password must be at least 6 characters';
-                        }
-                        return null;
-                      },
-                      onSaved: (value) {
-                        password = value!;
-                      },
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  isLoading
-                    ? const Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),))
+                ),
+                const SizedBox(height: 20),
+                isLoading
+                    ? const CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                      )
                     : InkWell(
-                        onTap: () async {
-                          if (_formKey.currentState!.validate()) {
-                            _formKey.currentState!.save();
-                            setState(() => isLoading = true); // Start loading
-      
-                            try {
-                              // Call the async register function and await completion
-                              await registerTherapist();
-      
-                              // Navigate to the welcome screen if successful
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(builder: (context) => const WelcomeScreen()),
-                              );
-                            } catch (error) {
-                              // Show error dialog if registration fails
-                              _showDialog("Registration Failed", error.toString());
-                            } finally {
-                              setState(() => isLoading = false); // Stop loading
-                            }
-                          }
-                        },
+                        onTap: registerTherapist,
                         child: Container(
                           padding: const EdgeInsets.symmetric(vertical: 8),
                           width: 330,
@@ -294,11 +217,7 @@ class _TherapistSignUpScreenState extends State<TherapistSignUpScreen> {
                             color: const Color.fromARGB(255, 103, 164, 245),
                             borderRadius: BorderRadius.circular(10),
                             boxShadow: const [
-                              BoxShadow(
-                                color: Colors.black12,
-                                blurRadius: 4,
-                                spreadRadius: 2,
-                              ),
+                              BoxShadow(color: Colors.black12, blurRadius: 4, spreadRadius: 2),
                             ],
                           ),
                           child: const Center(
@@ -313,40 +232,30 @@ class _TherapistSignUpScreenState extends State<TherapistSignUpScreen> {
                           ),
                         ),
                       ),
-      
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text(
-                        "Already have an account?",
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      "Already have an account?",
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const LoginScreen()),
+                      ),
+                      child: const Text(
+                        "Sign In",
                         style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.black,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromARGB(255, 103, 164, 245),
                         ),
                       ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const LoginScreen(),
-                            ),
-                          );
-                        },
-                        child: const Text(
-                          "Sign In",
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Color.fromARGB(255, 103, 164, 245),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
         ),

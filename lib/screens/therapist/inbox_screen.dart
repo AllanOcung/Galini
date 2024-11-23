@@ -4,15 +4,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:galini/screens/therapist/chat_screen.dart';
 
 
-class ChatsScreen extends StatelessWidget {
-  const ChatsScreen({Key? key}) : super(key: key);
+class InboxScreen extends StatelessWidget {
+  const InboxScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text("My Chat"),
+        title: const Text("My Chats"),
         automaticallyImplyLeading: false,
         backgroundColor: const Color(0xFF7D99AA),
         actions: [
@@ -32,15 +32,15 @@ class ChatsScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: const ChatListView(),
+      body: const ChatList(),
     );
   }
 }
 
-class ChatListView extends StatelessWidget {
-  const ChatListView({Key? key}) : super(key: key);
+class ChatList extends StatelessWidget {
+  const ChatList({Key? key}) : super(key: key);
 
-  Stream<List<Map<String, dynamic>>> _fetchChats() {
+  Stream<List<Map<String, dynamic>>> _fetchChatsStream() {
   final user = FirebaseAuth.instance.currentUser;
 
   if (user == null) {
@@ -55,7 +55,7 @@ class ChatListView extends StatelessWidget {
     List<Map<String, dynamic>> chatList = [];
 
     for (var doc in snapshot.docs) {
-      final chatData = doc.data();
+      //final chatData = doc.data();
       final subCollection = await FirebaseFirestore.instance
           .collection('chats')
           .doc(doc.id)
@@ -73,7 +73,7 @@ class ChatListView extends StatelessWidget {
             .collection('users')
             .doc(receiverId)
             .get();
-        final userName = userDoc.data()?['fullName'] ?? 'Unknown User';
+        final userName = userDoc.data()?['fullName'] ?? 'Unknown';
 
         chatList.add({
           'conversationId': doc.id,
@@ -82,15 +82,7 @@ class ChatListView extends StatelessWidget {
           'receiverId': receiverId,
           'name': userName, // Add the receiver's name
         });
-      } else {
-        chatList.add({
-          'conversationId': doc.id,
-          'lastMessage': '',
-          'lastMessageTime': null,
-          'receiverId': '',
-          'name': 'Unknown User',
-        });
-      }
+      } 
     }
 
     return chatList;
@@ -101,7 +93,7 @@ class ChatListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<Map<String, dynamic>>>(
-      stream: _fetchChats(),
+      stream: _fetchChatsStream(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -124,9 +116,9 @@ class ChatListView extends StatelessWidget {
             return ListTile(
               leading: CircleAvatar(
                 backgroundColor: Colors.grey.shade300,
-                child: Text(
+                child: const Text(
                   'allan',
-                  style: const TextStyle(color: Colors.white),
+                  style: TextStyle(color: Colors.white),
                 ),
               ),
               title: Text(

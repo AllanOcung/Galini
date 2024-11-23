@@ -65,7 +65,14 @@ class _TherapistAppointmentsScreenState
   Widget _buildAppointmentList(
     List<Map<String, dynamic>> appointments) {
   return appointments.isEmpty
-      ? const Center(child: Text('No appointments available in this category'))
+      ? const Center(
+        child: Text(
+          'No appointments available in this category',
+          style: TextStyle(
+            color: Color(0xFF7D99AA),
+          ),
+          ),
+          )
       : ListView.builder(
           itemCount: appointments.length,
           itemBuilder: (context, index) {
@@ -162,7 +169,16 @@ class _TherapistAppointmentsScreenState
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Center(child: Text("Appointments")),
+        title: const Center(
+          child: Text(
+            "Appointments",
+            style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+            color: Colors.white,
+          ),
+            ),
+            ),
         backgroundColor: const Color(0xFF7D99AA),
         automaticallyImplyLeading: false,
       ),
@@ -182,7 +198,7 @@ class _TherapistAppointmentsScreenState
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: selectedCategory == 'Pending'
-                        ? const Color(0xFF293325)
+                        ? const Color(0xFF7D99AA)
                         : Colors.grey,
                   ),
                   child: const Text("Pending", style: TextStyle(color: Colors.white),),
@@ -195,7 +211,7 @@ class _TherapistAppointmentsScreenState
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: selectedCategory == 'Upcoming'
-                        ? const Color(0xFF293325)
+                        ? const Color(0xFF7D99AA)
                         : Colors.grey,
                   ),
                   child: const Text("Upcoming", style: TextStyle(color: Colors.white),),
@@ -208,7 +224,7 @@ class _TherapistAppointmentsScreenState
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: selectedCategory == 'Completed'
-                        ? const Color(0xFF293325)
+                        ? const Color(0xFF7D99AA)
                         : Colors.grey,
                   ),
                   child: const Text("Completed", style: TextStyle(color: Colors.white),),

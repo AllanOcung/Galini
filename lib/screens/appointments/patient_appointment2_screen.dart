@@ -81,7 +81,7 @@ class _PatientAppointmentBookingScreenState extends State<PatientAppointmentBook
       return;
     }
 
-    if (widget.therapistId != null && selectedDate != null && selectedTimeSlot != null) {
+    if (selectedDate != null && selectedTimeSlot != null) {
       final appointmentId = _firestore.collection('appointments').doc().id;
 
       // Fetch the patient’s name (current user)
@@ -124,7 +124,7 @@ class _PatientAppointmentBookingScreenState extends State<PatientAppointmentBook
       try {
         await _firestore.collection('appointments').doc(appointmentId).set(appointmentData);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Appointment booked successfully!")),
+          const SnackBar(content: Text("Meeting booked successfully!")),
         );
 
         // Optionally, reset the form
@@ -137,7 +137,7 @@ class _PatientAppointmentBookingScreenState extends State<PatientAppointmentBook
       } catch (e) {
         print("Error booking appointment: $e");
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Failed to book appointment: $e")),
+          SnackBar(content: Text("Failed to book a meeting: $e")),
         );
       }
     } else {
@@ -152,7 +152,7 @@ class _PatientAppointmentBookingScreenState extends State<PatientAppointmentBook
     return Scaffold(
       backgroundColor: const Color(0xFFD3E9FF),
       appBar: AppBar(
-        title: const Text("Book Appointment"),
+        title: const Text("Book A Meeting", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),),
         backgroundColor: const Color(0xFFBDDDFC),
       ),
       body: Padding(
@@ -171,8 +171,8 @@ class _PatientAppointmentBookingScreenState extends State<PatientAppointmentBook
                       selectedDate = newValue;
                       selectedTimeSlot = null; // Reset time slot when date changes
                     });
-                    if (widget.therapistId != null && selectedDate != null) {
-                      fetchAvailableTimeSlots(widget.therapistId!, selectedDate!);
+                    if (selectedDate != null) {
+                      fetchAvailableTimeSlots(widget.therapistId, selectedDate!);
                     }
                   },
                   items: availableDates.map((date) {
@@ -208,7 +208,7 @@ class _PatientAppointmentBookingScreenState extends State<PatientAppointmentBook
             Center(
               child: ElevatedButton(
                 onPressed: bookAppointment,
-                child: const Text("Book Appointment"),
+                child: const Text("Confirm Booking", style: TextStyle(color: Colors.blue),),
               ),
             ),
           ],

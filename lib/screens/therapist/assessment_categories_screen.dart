@@ -9,8 +9,17 @@ class AssessmentCategoriesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[200],
-      appBar: AppBar(title: const Text("Self-Assessment Tools"),
+      appBar: AppBar(
+        title: const Text(
+          "Self-Assessment",
+          style: TextStyle(
+                fontSize: 25,
+                fontWeight: FontWeight.w500,
+                color: Color.fromARGB(255, 103, 164, 245),
+              ),
+          ),
       backgroundColor: const Color(0xFFBDDDFC),
+      //automaticallyImplyLeading: false,
       ),
       body: FutureBuilder<QuerySnapshot>(
         future: FirebaseFirestore.instance.collection('assessments').get(),

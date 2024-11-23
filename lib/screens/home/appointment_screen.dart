@@ -30,7 +30,7 @@ class AppointmentScreen extends StatelessWidget {
           // Retrieve therapist data
           var data = snapshot.data!.data() as Map<String, dynamic>;
           String name = data['name'] ?? 'No Name';
-          String role = data['role'] ?? 'No Role';
+          String role = data['specialty'] ?? 'No Specialty';
           String email = data['email'] ?? 'No Email';
           String experience = data['experience'] ?? 'No Experience';
           String location = data['location'] ?? 'No Location';
@@ -162,6 +162,7 @@ class AppointmentScreen extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w500,
+                              color: Colors.black,
                             ),
                           ),
                           ListTile(
@@ -173,22 +174,12 @@ class AppointmentScreen extends StatelessWidget {
                             title: Text(phoneNumber),
                           ),
                           const SizedBox(height: 5),
-                          const Text(
-                            "About Doctor",
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-                          ),
-                          const SizedBox(height: 5),
-                          Text(
-                            qualification,
-                            style: const TextStyle(fontSize: 16, color: Colors.black54),
-                          ),
-                          const SizedBox(height: 10),
-                          Row(
+                            Row(
                             children: [
                               const Text(
                                 "Experience:",
                                 style: TextStyle(
-                                    fontSize: 18, fontWeight: FontWeight.w500),
+                                    fontSize: 18, fontWeight: FontWeight.w500, color: Colors.black),
                               ),
                               const SizedBox(width: 10),
                               Text(
@@ -210,21 +201,23 @@ class AppointmentScreen extends StatelessWidget {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 5),
-                          
-                          const Text(
-                            "Location",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
                           ListTile(
                             leading: const Icon(Icons.location_on,
                                 color: Color.fromARGB(255, 103, 164, 245)),
                             title: Text(location),
                             subtitle: const Text("address line of the medical center"),
                           ),
+                          const SizedBox(height: 10),
+
+                          const Text(
+                            "About Doctor:",
+                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Colors.black,),
+                          ),
+                          const SizedBox(height: 5),
+                          Text(
+                            qualification,
+                            style: const TextStyle(fontSize: 16, color: Colors.black54),
+                          ),                          
                         ],
                       ),
                     ),
@@ -253,7 +246,7 @@ class AppointmentScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "Consultation price",
+                  "Booking fee",
                   style: TextStyle(
                     color: Colors.black54,
                   ),
@@ -287,7 +280,7 @@ class AppointmentScreen extends StatelessWidget {
                 ),
                 child: const Center(
                   child: Text(
-                    "Book Appointment",
+                    "Book A Meeting",
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 18,

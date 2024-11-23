@@ -48,6 +48,7 @@ class _SettingScreenState extends State<SettingScreen> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text("Settings"),
+        backgroundColor: const Color(0xFFBDDDFC),
       ),
       body: SingleChildScrollView(
         child: Padding(

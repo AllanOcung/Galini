@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class TherapistRequest {
   final String name;
-  final String email;
   final String specialty;
+  final String email;
   final String status;
   final String requestDate; 
   final String location;
@@ -12,8 +12,8 @@ class TherapistRequest {
 
   TherapistRequest({
     required this.name,
-    required this.email,
     required this.specialty,
+    required this.email,
     required this.status,
     required this.requestDate,
     required this.location,
@@ -24,8 +24,8 @@ class TherapistRequest {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
     return TherapistRequest(
       name: data['name'] ?? '',
-      email: data['email'] ?? '',
       specialty: data['specialty'] ?? '',
+      email: data['email'] ?? '',
       status: data['status'] ?? 'pending',
       requestDate: (data['requestDate'] as Timestamp?)?.toDate().toString() ?? '',
       location: data['location'] ?? '',
@@ -37,8 +37,8 @@ class TherapistRequest {
   Map<String, dynamic> toMap() {
     return {
       'name': name,
-      'email': email,
       'specialty': specialty,
+      'email': email,
       'status': status,
       'requestDate': FieldValue.serverTimestamp(), // Automatically set timestamp on Firestore
       'location': location,

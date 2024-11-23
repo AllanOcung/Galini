@@ -13,7 +13,7 @@ class MessagesScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text("My Chats"),
         automaticallyImplyLeading: false,
-        backgroundColor: const Color(0xFF7D99AA),
+        backgroundColor: const Color(0xFFBDDDFC),
         actions: [
           IconButton(
             icon: const Icon(Icons.search),
@@ -75,15 +75,7 @@ class ChatListView extends StatelessWidget {
           'receiverId': receiverId,
           'name': userName, // Add the receiver's name
         });
-      } else {
-        chatList.add({
-          'conversationId': doc.id,
-          'lastMessage': '',
-          'lastMessageTime': null,
-          'receiverId': '',
-          'name': 'Unknown User',
-        });
-      }
+      } 
     }
 
     return chatList;

@@ -89,7 +89,17 @@ class _EditAssessmentScreenState extends State<EditAssessmentScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Edit Assessment")),
+      backgroundColor: Colors.white,
+      appBar: AppBar(title: const Text(
+        "Edit Assessment",
+        style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+            color: Colors.white,
+          ),
+      ),
+      backgroundColor: const Color(0xFF7D99AA),
+      ),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -100,6 +110,7 @@ class _EditAssessmentScreenState extends State<EditAssessmentScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 TextField(
+                  style: const TextStyle(color: Color(0xFF7D99AA)),
                   controller: TextEditingController(text: question.text),
                   decoration: const InputDecoration(labelText: 'Question Text'),
                   onChanged: (value) => question.text = value,
@@ -111,6 +122,7 @@ class _EditAssessmentScreenState extends State<EditAssessmentScreen> {
                     children: [
                       Expanded(
                         child: TextField(
+                          style: const TextStyle(color: Color(0xFF7D99AA)),
                           controller: TextEditingController(text: option.text),
                           decoration: const InputDecoration(labelText: 'Option Text'),
                           onChanged: (value) => option.text = value,
@@ -119,6 +131,7 @@ class _EditAssessmentScreenState extends State<EditAssessmentScreen> {
                       SizedBox(
                         width: 60,
                         child: TextField(
+                          style: const TextStyle(color: Color(0xFF7D99AA)),
                           controller: TextEditingController(text: option.score.toString()),
                           decoration: const InputDecoration(labelText: 'Score'),
                           keyboardType: TextInputType.number,
@@ -134,7 +147,7 @@ class _EditAssessmentScreenState extends State<EditAssessmentScreen> {
                 }).toList(),
                 TextButton(
                   onPressed: () => _addNewOption(questionIndex),
-                  child: const Text("Add Option"),
+                  child: const Text("Add Option", style: TextStyle(color: Color.fromARGB(255, 3, 4, 5), fontWeight: FontWeight.bold,),),
                 ),
                 IconButton(
                   icon: const Icon(Icons.delete_forever, color: Colors.red),
@@ -144,13 +157,21 @@ class _EditAssessmentScreenState extends State<EditAssessmentScreen> {
               ],
             );
           }).toList(),
-          ElevatedButton(
+         ElevatedButton(
             onPressed: _addNewQuestion,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF7D99AA), // Change to your desired color
+              foregroundColor: Colors.white, // Text color
+            ),
             child: const Text("Add New Question"),
           ),
           const SizedBox(height: 20),
           ElevatedButton(
             onPressed: _updateAssessment,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF7D99AA), // Change to your desired color
+              foregroundColor: Colors.white,
+            ),
             child: const Text("Save Changes"),
           ),
         ],

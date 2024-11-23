@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:galini/screens/authenticate/login_screen.dart';
+import 'package:galini/screens/therapist/news_feed_screen.dart';
+import 'package:galini/screens/therapist/posts_screen.dart';
 
 class MoreScreen extends StatelessWidget {
   MoreScreen({Key? key}) : super(key: key);
@@ -12,7 +14,16 @@ class MoreScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Center(child: Text("More")),
+        title: const Center(
+          child: Text(
+            "More",
+            style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+            color: Colors.white,
+          ),
+            ),
+            ),
         backgroundColor: const Color(0xFF7D99AA),
         automaticallyImplyLeading: false,
       ),
@@ -23,6 +34,18 @@ class MoreScreen extends StatelessWidget {
             title: const Text("Settings"),
             onTap: () {
               // Navigate to settings
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.help),
+            title: const Text("My Posts"),
+            onTap: () {
+              Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const TherapistPostsScreen(),
+                    ),
+                  );
             },
           ),
           ListTile(

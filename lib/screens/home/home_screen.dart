@@ -1,9 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart'; // Import for Firestore
-import 'package:galini/screens/appointments/patient_appointment_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:galini/screens/home/appointment_screen.dart';
+import 'package:galini/screens/home/news_screen.dart';
+import 'package:galini/screens/home/schedule_screen.dart';
 import 'package:galini/screens/home/settings_screen.dart';
+import 'package:galini/screens/therapist/assessment_categories_screen.dart';
+import 'package:intl/intl.dart';
 
 
 class HomeScreen extends StatefulWidget {
@@ -54,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Padding(
           padding: const EdgeInsets.all(6.0),
           child: Row(
-            //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Column(
                 mainAxisSize: MainAxisSize.min,
@@ -77,18 +80,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 backgroundImage: AssetImage("images/doctor1.jpg"),
               ),
               // Notification Icon
-              IconButton(
-                icon: const Icon(Icons.notifications, color: Colors.black),
-                onPressed: () {
-                  // Navigate to the notifications screen or show a dialog
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (context) => const NotificationsScreen(),
-                  //   ),
-                  // );
-                },
-              ),
+              // IconButton(
+              //   icon: const Icon(Icons.notifications, color: Colors.black),
+              //   onPressed: () {
+              //     // Navigate to the notifications screen or show a dialog
+              //     // Navigator.push(
+              //     //   context,
+              //     //   MaterialPageRoute(
+              //     //     builder: (context) => const NotificationsScreen(),
+              //     //   ),
+              //     // );
+              //   },
+              // ),
               InkWell(
               onTap: () {
                 Navigator.push(
@@ -150,23 +153,30 @@ class _HomeScreenState extends State<HomeScreen> {
                            Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => PatientAppointmentBookingScreen(),
+                              builder: (context) => const AssessmentCategoriesScreen(),
                             ),
                           );
                         },
-                        icon: Icons.calendar_today,
+                        icon: Icons.self_improvement,
                         iconColor: const Color.fromARGB(255, 103, 164, 245),
-                        title: "Book",
-                        subtitle: "Appointment",
+                        title: "Self",
+                        subtitle: "Assessment",
                         backgroundColor: const Color.fromARGB(255, 103, 164, 245),
                       ),
                       _buildVisitCard(
                         context: context,
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const NewsScreen(),
+                            ),
+                          );
+                        },
                         icon: Icons.quiz,
                         iconColor: const Color.fromARGB(255, 103, 164, 245),
-                        title: "Self",
-                        subtitle: "Assessment",
+                        title: "News",
+                        subtitle: "Feed",
                         backgroundColor: Colors.white, // FDFCDE
                         textColor: Colors.black,
                       ),
@@ -175,26 +185,26 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(height: 15),
                   Container(
                     padding: const EdgeInsets.only(left: 10, right: 10),
-                    child: const Row(
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
+                        const Text(
                         'Next Appointment',
                         style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.bold),
                       ),
                       //SizedBox(width: 135),
                       InkWell(
-                        // onTap: (){
-                        //   Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //       builder: (context) => const ScheduleScreen(),
-                        //     ),
-                        //   );
-                        // },
-                        child: Text(
+                        onTap: (){
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const ScheduleScreen(),
+                            ),
+                          );
+                        },
+                        child: const Text(
                           "See all",
-                          style: TextStyle(fontSize: 10, color: Colors.grey),
+                          style: TextStyle(fontSize: 15, color: Colors.grey),
                           
                         ),
                       ),
@@ -296,52 +306,100 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-    Widget _nextAppointmentCard() {
-    return Center(
-      child: SizedBox(
-        width: 320,
-        height: 114,
-        child: Card(
-          color: const Color.fromARGB(255, 103, 164, 245),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      Widget _nextAppointmentCard() {
+  return StreamBuilder<QuerySnapshot>(
+    stream: FirebaseFirestore.instance
+        .collection('appointments')
+        .where('status', isEqualTo: 'approved') // Filter for approved appointments
+        .where('patientId', isEqualTo: currentUser?.uid)
+        .orderBy('appointmentDate') // Order by appointment date (ascending)
+        .limit(1) // Get only the soonest appointment
+        .snapshots(),
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return const Center(child: CircularProgressIndicator());
+      }
+      if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+        return Card(
+          color: Colors.grey[200],
+          margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+          elevation: 2,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
           child: const Padding(
-            padding: EdgeInsets.all(10),
-            child: Row(
-              children: [
-                CircleAvatar(
-                  backgroundImage: AssetImage('images/doctor1.jpg'), // Placeholder image
-                  radius: 30,
-                ),
-                SizedBox(width: 20),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Therapy',
-                      style: TextStyle(color: Colors.white, fontSize: 16),
-                    ),
-                    SizedBox(height: 2),
-                    Text(
-                      'Dr. Gibson',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 2),
-                    Text(
-                      '17 June, 13:00 - 14:30',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ],
-                ),
-              ],
+            padding: EdgeInsets.all(16.0),
+            child: Center(
+              child: Text(
+                'you have No upcoming meetings',
+                style: TextStyle(fontSize: 16, color: Colors.grey),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+        );
+      }
+
+      // Extract the first appointment document
+      var appointment = snapshot.data!.docs.first;
+      String therapistName = appointment['therapistName'] ?? 'Therapist';
+
+      // Safely handle `appointmentDate` as a Firestore Timestamp
+      Timestamp? appointmentDateTimestamp = appointment['appointmentDate'];
+      String appointmentDate = appointmentDateTimestamp != null
+          ? DateFormat('dd MMM yyyy').format(appointmentDateTimestamp.toDate())
+          : 'Unknown Date';
+
+      String timeSlot = appointment['timeSlot'] ?? 'Unknown Time';
+
+      return Center(
+        child: SizedBox(
+          width: 320,
+          height: 114,
+          child: Card(
+            color: const Color.fromARGB(255, 103, 164, 245),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: Row(
+                children: [
+                  const CircleAvatar(
+                    backgroundImage: AssetImage('images/doctor1.jpg'), // Placeholder image
+                    radius: 30,
+                  ),
+                  const SizedBox(width: 20),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const SizedBox(height: 5),
+                      Text(
+                        therapistName,
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        appointmentDate,
+                        style: const TextStyle(color: Colors.white, fontSize: 16),
+                      ),
+                      const SizedBox(height: 5),
+                      Text(
+                        timeSlot,
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
-      ),
-    );
-  }
+      );
+    },
+  );
+}
 
 
   Widget _specialistList() {
@@ -363,7 +421,7 @@ class _HomeScreenState extends State<HomeScreen> {
         return Column(
           children: snapshot.data!.docs.map((doc) {
             String name = doc['name'] ?? 'No Name';
-            String role = doc['role'] ?? 'No Role';
+            String role = doc['specialty'] ?? 'No Specialty';
             String therapistId = doc.id;
 
             return _specialistItem(name, role, therapistId);

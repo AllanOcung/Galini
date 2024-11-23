@@ -12,7 +12,17 @@ class TherapistAssessmentManagementScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Manage Assessments")),
+      backgroundColor: Colors.white,
+      appBar: AppBar(title: const Text(
+        "Manage Assessments",
+        style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+            color: Colors.white,
+          ),
+        ),
+      backgroundColor: const Color(0xFF7D99AA),
+      ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance.collection('assessments').snapshots(),
         builder: (context, snapshot) {
@@ -29,12 +39,12 @@ class TherapistAssessmentManagementScreen extends StatelessWidget {
             itemBuilder: (context, index) {
               String assessmentId = assessments[index].id;
               return ListTile(
-                title: Text(assessmentId),
+                title: Text(assessmentId, style: const TextStyle(fontWeight: FontWeight.bold),),
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     IconButton(
-                      icon: const Icon(Icons.edit, color: Colors.blue),
+                      icon: const Icon(Icons.edit, color: Color(0xFF7D99AA),),
                       onPressed: () {
                         Navigator.push(
                           context,

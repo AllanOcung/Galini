@@ -182,6 +182,14 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
               ),
+              const SizedBox(height: 10),
+              Container(
+                padding: const EdgeInsets.only(left: 10, right: 10),
+                child: const Text(
+                  "Availability",
+                  style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
+                ),
+              ),
               GestureDetector(
                 onTap: () {
                   Navigator.push(
@@ -201,7 +209,7 @@ class HomeScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "Manage Appointments",
+                          "Manage Availability",
                           style: TextStyle(fontSize: 18, color: Colors.white),
                         ),
                         Icon(Icons.arrow_forward, color: Colors.white),

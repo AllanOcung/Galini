@@ -45,7 +45,7 @@ class Authenticate {
   }
 
   // Register Therapist with email and password
-  Future<void> registerTherapist(String name, String email, String status, String password, String experience, String qualifications, String location, String phoneNumber) async {
+  Future<void> registerTherapist(String name, String specialty, String email, String status, String password, String experience, String qualifications, String location, String phoneNumber) async {
     try {
       // Step 1: Register therapist with Firebase Authentication
       UserCredential result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
@@ -58,6 +58,7 @@ class Authenticate {
         await _firestore.collection('therapist_requests').doc(user.uid).set({
           'uid': user.uid,
           'name': name,
+          'specialty': specialty,
           'email': email,
           'status': 'pending',
           'experience': experience,
