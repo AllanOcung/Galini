@@ -5,31 +5,32 @@ import 'package:firebase_auth/firebase_auth.dart';
 class CompletedSchedule extends StatelessWidget {
   const CompletedSchedule({super.key});
 
-  Future<List<Map<String, dynamic>>> fetchAppointments() async {
+  // Stream for fetching completed appointments
+  Stream<List<Map<String, dynamic>>> fetchAppointments() {
     final userId = FirebaseAuth.instance.currentUser?.uid;
 
-    // Retrieve only appointments with 'completed' status and matching patientId
-    final querySnapshot = await FirebaseFirestore.instance
+    return FirebaseFirestore.instance
         .collection('appointments')
         .where('status', isEqualTo: 'completed')
         .where('patientId', isEqualTo: userId)
-        .get();
+        .snapshots() // Listen to real-time updates
+        .asyncMap((snapshot) async {
+          // Ensure we resolve each future inside the map
+          List<Map<String, dynamic>> appointments = [];
+          for (var doc in snapshot.docs) {
+            var data = doc.data();
+            data['appointmentDate'] = _formatTimestamp(data['appointmentDate']);
 
-    final appointments = await Future.wait(querySnapshot.docs.map((doc) async {
-      var data = doc.data();
-      data['appointmentDate'] = _formatTimestamp(data['appointmentDate']);
-      
-      // Fetch therapist details using therapistId
-      final therapistId = data['therapistId'];  // Therapist ID from appointment
-      final therapistData = await _fetchTherapistData(therapistId);
-
-      // Add therapist data to appointment
-      data['role'] = therapistData['role'] ?? 'Unknown';
-      data['therapistName'] = therapistData['name'] ?? 'Unknown';
-      return data;
-    }));
-
-    return appointments;
+            final therapistId = data['therapistId'];
+            final therapistData = await _fetchTherapistData(therapistId);
+            
+            data['role'] = therapistData['role'] ?? 'Unknown';
+            data['therapistName'] = therapistData['name'] ?? 'Unknown';
+            data['appointmentId'] = doc.id; // Store the document ID for deletion
+            appointments.add(data);
+          }
+          return appointments;
+        });
   }
 
   Future<Map<String, dynamic>> _fetchTherapistData(String therapistId) async {
@@ -43,18 +44,30 @@ class CompletedSchedule extends StatelessWidget {
 
   String _formatTimestamp(dynamic timestamp) {
     if (timestamp is Timestamp) {
-      final dateTime = timestamp.toDate();  // Convert Timestamp to DateTime
-      return '${dateTime.month}/${dateTime.day}/${dateTime.year}';  // Format as mm/dd/yyyy
+      final dateTime = timestamp.toDate();
+      return '${dateTime.month}/${dateTime.day}/${dateTime.year}';
     }
-    return 'Unknown';  // Return a default value if the value is not a Timestamp
+    return 'Unknown';
+  }
+
+  Future<void> deleteAppointment(String appointmentId) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('appointments')
+          .doc(appointmentId)
+          .delete();
+      print('Appointment deleted');
+    } catch (e) {
+      print('Error deleting appointment: $e');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
-      child: FutureBuilder<List<Map<String, dynamic>>>(
-        future: fetchAppointments(),
+      child: StreamBuilder<List<Map<String, dynamic>>>(
+        stream: fetchAppointments(), // Stream for real-time updates
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -73,25 +86,30 @@ class CompletedSchedule extends StatelessWidget {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
               ),
               const SizedBox(height: 15),
-           ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: appointments.length,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 10),
-                      child: AppointmentCard(
-                        doctorName: appointments[index]['therapistName'] ?? 'Unknown',
-                        specialization: appointments[index]['role'] ?? 'therapist',
-                        date: appointments[index]['appointmentDate'] ?? 'Unknown',
-                        time: appointments[index]['timeSlot'] ?? 'Unknown',
-                        statusColor: Colors.blue,
-                        statusText: "Completed",
-                        imagePath: "images/doctor2.jpg",
-                      ),
-                    );
-                  },
-                ),
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: appointments.length,
+                itemBuilder: (context, index) {
+                  final appointment = appointments[index];
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: AppointmentCard(
+                      doctorName: appointment['therapistName'] ?? 'Unknown',
+                      specialization: appointment['role'] ?? 'therapist',
+                      date: appointment['appointmentDate'] ?? 'Unknown',
+                      time: appointment['timeSlot'] ?? 'Unknown',
+                      statusColor: Colors.blue,
+                      statusText: "Completed",
+                      imagePath: "images/doctor2.jpg",
+                      appointmentId: appointment['appointmentId'], // Pass appointment ID for deletion
+                      onDelete: () {
+                        deleteAppointment(appointment['appointmentId']);
+                      },
+                    ),
+                  );
+                },
+              ),
             ],
           );
         },
@@ -108,6 +126,8 @@ class AppointmentCard extends StatelessWidget {
   final Color statusColor;
   final String statusText;
   final String imagePath;
+  final String appointmentId;
+  final VoidCallback onDelete; // Callback for delete action
 
   const AppointmentCard({
     super.key,
@@ -118,6 +138,8 @@ class AppointmentCard extends StatelessWidget {
     required this.statusColor,
     required this.statusText,
     required this.imagePath,
+    required this.appointmentId,
+    required this.onDelete,
   });
 
   @override
@@ -153,7 +175,6 @@ class AppointmentCard extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(left: 10.0),
             child: Row(
-              //mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Row(
                   children: [
@@ -189,10 +210,15 @@ class AppointmentCard extends StatelessWidget {
                 ),
                 const SizedBox(width: 5),
                 Text(statusText, style: const TextStyle(color: Colors.black54)),
+                const SizedBox(width: 30),
+                // Delete Button
+                IconButton(
+                  icon: const Icon(Icons.delete, color: Colors.red),
+                  onPressed: onDelete,
+                ),
               ],
             ),
           ),
-          const SizedBox(height: 5),
         ],
       ),
     );

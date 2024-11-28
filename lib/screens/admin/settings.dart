@@ -10,9 +10,10 @@ class AdminSettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text("Settings"),
-        backgroundColor: const Color.fromARGB(255, 103, 164, 245),
+        backgroundColor: Colors.white,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -21,7 +22,7 @@ class AdminSettingsScreen extends StatelessWidget {
           children: [
             const Text(
               "Admin Profile",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
             ),
             const ListTile(
               leading: Icon(Icons.person),
@@ -31,7 +32,7 @@ class AdminSettingsScreen extends StatelessWidget {
             const Divider(),
             const Text(
               "Settings",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
             ),
             ListTile(
               leading: const Icon(Icons.lock),
@@ -69,7 +70,7 @@ class AdminSettingsScreen extends StatelessWidget {
                 backgroundColor: Colors.grey,
                 minimumSize: const Size(double.infinity, 50),
               ),
-              child: const Text("Logout"),
+              child: const Text("Sign out", style: TextStyle(color: Colors.black),),
             ),
           ],
         ),

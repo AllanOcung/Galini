@@ -83,8 +83,11 @@ class _TherapistPostsScreenState extends State<TherapistPostsScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Your Posts'),
+        title: const Text('Your Posts', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
         backgroundColor: const Color(0xFF7D99AA),
+        iconTheme: const IconThemeData(
+          color: Colors.white, // Set the back arrow color here
+        ),
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
@@ -171,6 +174,7 @@ class _TherapistPostsScreenState extends State<TherapistPostsScreen> {
                             icon: const Icon(Icons.comment),
                             onPressed: () {
                               // Comment button logic
+                              _showCommentsModal(post.id);
                             },
                           ),
                           Text('${(post['comments'] as List<dynamic>?)?.length ?? 0} Comments', style: const TextStyle(color: Colors.black54, fontWeight: FontWeight.bold)),
@@ -194,10 +198,112 @@ class _TherapistPostsScreenState extends State<TherapistPostsScreen> {
           );
         }, // Navigate to create post screen
         backgroundColor: const Color(0xFF7D99AA),
-        child: const Icon(Icons.add), // Plus icon
+        child: const Icon(Icons.add, color: Colors.white,), // Plus icon
       ),
     );
   }
+
+  // Show comments modal
+  void _showCommentsModal(String postId) {
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(16.0)),
+    ),
+    builder: (context) {
+      return FractionallySizedBox(
+        heightFactor: 0.5, // Adjust this value for the modal height (50% of screen height)
+        child: FutureBuilder<DocumentSnapshot>(
+          future: FirebaseFirestore.instance.collection('news_feed').doc(postId).get(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            if (!snapshot.hasData || !snapshot.data!.exists) {
+              return const Center(child: Text('No comments found.'));
+            }
+
+            var postData = snapshot.data!.data() as Map<String, dynamic>;
+            var comments = postData['comments'] as List<dynamic>? ?? [];
+
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  // Modal header
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 8.0),
+                    height: 5,
+                    width: 60,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  const Text(
+                    'Comments',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 16),
+                  Expanded(
+                    child: ListView.separated(
+                      itemCount: comments.length,
+                      separatorBuilder: (context, index) =>
+                          const Divider(color: Colors.grey),
+                      itemBuilder: (context, index) {
+                        var comment = comments[index] as Map<String, dynamic>;
+                        return Card(
+                          margin: const EdgeInsets.symmetric(vertical: 4),
+                          elevation: 3,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  comment['comment'] ?? 'No content',
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  comment['timestamp'] != null
+                                      ? (comment['timestamp'] as Timestamp)
+                                          .toDate()
+                                          .toString()
+                                      : 'No timestamp',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.grey[600],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      );
+    },
+  );
+}
+
+
 }
 
 class EditPostScreen extends StatefulWidget {

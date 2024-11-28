@@ -54,13 +54,13 @@ class AppointmentScreen extends StatelessWidget {
                               },
                               child: const Icon(
                                 Icons.arrow_back_ios_new,
-                                color: Colors.white,
+                                color: Colors.blue,
                                 size: 25,
                               ),
                             ),
                             const Icon(
                               Icons.more_vert,
-                              color: Colors.white,
+                              color: Colors.blue,
                               size: 28,
                             ),
                           ],
@@ -208,16 +208,40 @@ class AppointmentScreen extends StatelessWidget {
                             subtitle: const Text("address line of the medical center"),
                           ),
                           const SizedBox(height: 10),
-
-                          const Text(
-                            "About Doctor:",
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Colors.black,),
+                          Center(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                              child: Card(
+                                color: Colors.grey[200],
+                                elevation: 3.5, // Shadow for a lifted effect
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(15),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      const Text(
+                                        "About:",
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 10),
+                                      Text(
+                                        qualification,
+                                        style: const TextStyle(fontSize: 16, color: Colors.black54),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
                           ),
-                          const SizedBox(height: 5),
-                          Text(
-                            qualification,
-                            style: const TextStyle(fontSize: 16, color: Colors.black54),
-                          ),                          
+                     
                         ],
                       ),
                     ),
@@ -252,7 +276,7 @@ class AppointmentScreen extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  "\$100",
+                  "\$20",
                   style: TextStyle(
                     color: Colors.black54,
                     fontSize: 20,
@@ -280,7 +304,7 @@ class AppointmentScreen extends StatelessWidget {
                 ),
                 child: const Center(
                   child: Text(
-                    "Book A Meeting",
+                    "Book Meeting",
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 18,

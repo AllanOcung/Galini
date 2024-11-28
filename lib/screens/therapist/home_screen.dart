@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:galini/screens/therapist/posts_screen.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:galini/screens/therapist/assessment_management_screen.dart';
-import 'package:galini/screens/therapist/assessment_question_setting.dart';
 
 import '../appointments/therapist_appointment _management_screen.dart';
 
@@ -13,8 +13,8 @@ class HomeScreen extends StatelessWidget {
   // Fetch the count of active patients with 'approved' status
   Future<int> _getActivePatientsCount() async {
     final querySnapshot = await FirebaseFirestore.instance
-        .collection('appointments')
-        .where('status', isEqualTo: 'approved') // Query for approved status
+        .collection('users')
+        .where('role', isEqualTo: 'user') 
         .get();
     
     return querySnapshot.docs.length; // Return the count of approved appointments
@@ -67,17 +67,48 @@ class HomeScreen extends StatelessWidget {
                         "$greeting, $userName",
                         style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
                       ),
-                      Text(
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
                         _getFormattedDate(),
                         style: const TextStyle(fontSize: 16, color: Colors.white70),
                       ),
+                      const SizedBox(width: 80,),
+                          const CircleAvatar(
+                            radius: 25,
+                            backgroundImage: AssetImage("images/doctor1.jpg"),
+                          ),
+                        ],
+                      ),
+                      
                     ],
                   );
                 },
               ),
               const SizedBox(height: 20),
+              // Search bar
+              Center(
+                child: SizedBox(
+                  height: 50,
+                  width: 335,
+                  child: TextField(
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(Icons.search, color: Colors.grey[600]),
+                      hintText: 'Search',
+                      filled: true,
+                      fillColor: Colors.grey[200],
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
               const Text(
-                "Today's Agenda",
+                "Dashboard",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
               ),
               const SizedBox(height: 16),
@@ -118,41 +149,13 @@ class HomeScreen extends StatelessWidget {
               ),
               _nextAppointmentCard(),
               const SizedBox(height: 10),
-              Container(
-                padding: const EdgeInsets.only(left: 10, right: 10),
-                child: const Text(
-                  "Assessments",
-                  style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
-                ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const TherapistQuestionSettingScreen()),
-                  );
-                },
-                child: Card(
-                  color: const Color(0xFF293325),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  elevation: 4,
-                  child: const Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Set Assessment Questions",
-                          style: TextStyle(fontSize: 18, color: Colors.white),
-                        ),
-                        Icon(Icons.arrow_forward, color: Colors.white),
-                      ],
-                    ),
+               Container(
+                  padding: const EdgeInsets.only(left: 10, right: 10),
+                  child: const Text(
+                    "Assessments",
+                    style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
                   ),
                 ),
-              ),
               const SizedBox(height: 5),
               GestureDetector(
                 onTap: () {
@@ -182,6 +185,46 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
               ),
+              // My posts
+                const SizedBox(height: 10),
+                Container(
+                  padding: const EdgeInsets.only(left: 10, right: 10),
+                  child: const Text(
+                    "My Posts",
+                    style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    // Navigate to a detailed My Posts screen
+                     Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const TherapistPostsScreen(),
+                    ),
+                  );
+                  },
+                  child: Card(
+                    color: const Color(0xFF293325),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    elevation: 4,
+                    child: const Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "View and Manage Posts",
+                            style: TextStyle(fontSize: 18, color: Colors.white),
+                          ),
+                          Icon(Icons.arrow_forward, color: Colors.white),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
               const SizedBox(height: 10),
               Container(
                 padding: const EdgeInsets.only(left: 10, right: 10),
@@ -252,49 +295,102 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _nextAppointmentCard() {
-    return Center(
-      child: SizedBox(
-        width: 320,
-        height: 114,
-        child: Card(
-          color: const Color(0xFF293325),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+  return StreamBuilder<QuerySnapshot>(
+    
+    stream: FirebaseFirestore.instance
+        .collection('appointments')
+        .where('status', isEqualTo: 'approved') // Filter for approved appointments
+        .where('therapistId', isEqualTo: userId)
+        .orderBy('appointmentDate') // Order by appointment date (ascending)
+        .limit(1) // Get only the soonest appointment
+        .snapshots(),
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return const Center(child: CircularProgressIndicator());
+      }
+      if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+        return Card(
+          color: Colors.grey[200],
+          margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+          elevation: 2,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
           child: const Padding(
-            padding: EdgeInsets.all(10),
-            child: Row(
-              children: [
-                CircleAvatar(
-                  backgroundImage: AssetImage('images/doctor1.jpg'), // Placeholder image
-                  radius: 30,
-                ),
-                SizedBox(width: 20),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Therapy',
-                      style: TextStyle(color: Colors.grey, fontSize: 16),
-                    ),
-                    SizedBox(height: 2),
-                    Text(
-                      'Dr. Gibson',
-                      style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 2),
-                    Text(
-                      '17 June, 13:00 - 14:30',
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                  ],
-                ),
-              ],
+            padding: EdgeInsets.all(16.0),
+            child: Center(
+              child: Text(
+                'You have no upcoming appointments.',
+                style: TextStyle(fontSize: 16, color: Colors.grey),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+        );
+      }
+
+      // Extract the first appointment document
+      var appointment = snapshot.data!.docs.first;
+      String therapistName = appointment['patientName'] ?? 'Patient';
+      String therapistImage = 'images/doctor1.jpg';
+
+      // Safely handle `appointmentDate` as a Firestore Timestamp
+      Timestamp? appointmentDateTimestamp = appointment['appointmentDate'];
+      String appointmentDate = appointmentDateTimestamp != null
+          ? DateFormat('dd MMM yyyy').format(appointmentDateTimestamp.toDate())
+          : 'Unknown Date';
+
+      String timeSlot = appointment['timeSlot'] ?? 'Unknown Time';
+
+      return Center(
+        child: SizedBox(
+          width: 320,
+          height: 114,
+          child: Card(
+            color: Colors.white,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    backgroundImage: AssetImage(therapistImage), // Using dynamic image or placeholder
+                    radius: 30,
+                  ),
+                  const SizedBox(width: 20),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const SizedBox(height: 5),
+                      Text(
+                        therapistName,
+                        style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        appointmentDate,
+                        style: const TextStyle(color: Colors.black45, fontSize: 16),
+                      ),
+                      const SizedBox(height: 5),
+                      Text(
+                        timeSlot,
+                        style: const TextStyle(color: Colors.black45),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
-      ),
-    );
-  }
+      );
+    },
+  );
+}
+
+
 }

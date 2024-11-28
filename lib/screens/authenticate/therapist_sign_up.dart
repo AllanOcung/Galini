@@ -119,14 +119,6 @@ class _TherapistSignUpScreenState extends State<TherapistSignUpScreen> {
             child: Column(
               children: [
                 const SizedBox(height: 10),
-                Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Image.asset(
-                    "images/doctors.png",
-                    width: 150,
-                    height: 150,
-                  ),
-                ),
                 _buildField(
                   labelText: "Full Name",
                   prefixIcon: Icons.person,

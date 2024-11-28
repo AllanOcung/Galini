@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
 
 class TherapistAppointmentsScreen extends StatefulWidget {
   const TherapistAppointmentsScreen({super.key});
@@ -106,7 +107,7 @@ class _TherapistAppointmentsScreenState
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 5),
-                    Text('Date: ${appointment['appointmentDate']}'),
+                    Text('Date: ${DateFormat('MMMM dd, yyyy').format(appointment['appointmentDate'])}'),
                     Text('Time: ${appointment['timeSlot']}'),
                     Text('Status: ${appointment['status']}'),
                   ],

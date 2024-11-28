@@ -11,31 +11,33 @@ class WelcomeScreen extends StatelessWidget {
       child: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: const AssetImage("images/back3.jpg"), // Your background image path
-            fit: BoxFit.cover,
-            alignment: Alignment.center,
-            colorFilter: ColorFilter.mode(
-              Colors.black.withOpacity(0.2), // Darker overlay for better readability
-              BlendMode.darken,
-            ),
-          ),
+        decoration: const BoxDecoration(
+          color: Colors.white,
         ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start, // Align everything to the start (left)
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 200),
+            const SizedBox(height: 50), // Add spacing for the logo
+            Center(
+             child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Image.asset(
+                      "images/doctors.png",
+                      width: 100,
+                      height: 100,
+                    ),
+                  ),
+            ),
             const Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
                   padding: EdgeInsets.only(left: 10),
                   child: Text(
-                    "Find",
+                    "Discover",
                     style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 55,
+                      color: Color.fromARGB(255, 103, 164, 245),
+                      fontSize: 50,
                       height: 1.2,
                       letterSpacing: 2,
                       wordSpacing: 2,
@@ -46,10 +48,10 @@ class WelcomeScreen extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.only(left: 10),
                   child: Text(
-                    "the best",
+                    "your",
                     style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 55,
+                      color: Color.fromARGB(255, 103, 164, 245),
+                      fontSize: 50,
                       height: 1.2,
                       letterSpacing: 2,
                       wordSpacing: 2,
@@ -60,10 +62,10 @@ class WelcomeScreen extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.only(left: 10),
                   child: Text(
-                    "therapist",
+                    "path",
                     style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 55,
+                      color: Color.fromARGB(255, 103, 164, 245),
+                      fontSize: 50,
                       height: 1.2,
                       letterSpacing: 2,
                       wordSpacing: 2,
@@ -74,10 +76,24 @@ class WelcomeScreen extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.only(left: 10),
                   child: Text(
-                    "for you.",
+                    "to",
                     style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 55,
+                      color: Color.fromARGB(255, 103, 164, 245),
+                      fontSize: 50,
+                      height: 1.2,
+                      letterSpacing: 2,
+                      wordSpacing: 2,
+                    ),
+                    textAlign: TextAlign.left,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 10),
+                  child: Text(
+                    "Healing.",
+                    style: TextStyle(
+                      color: Color.fromARGB(255, 103, 164, 245),
+                      fontSize: 50,
                       height: 1.2,
                       letterSpacing: 2,
                       wordSpacing: 2,
@@ -87,22 +103,31 @@ class WelcomeScreen extends StatelessWidget {
                 ),
               ],
             ),
-            const Spacer(),
+            const SizedBox(height: 20),
             const Center(
               child: Padding(
                 padding: EdgeInsets.only(bottom: 20),
                 child: Text(
-                  '"Empathy at your fingertips"',
-                  textAlign: TextAlign.left, // Align text to the left
+                  '"Empowering minds, one step at a time."',
+                  textAlign: TextAlign.center,
                   style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16, // Adjusted for visibility
+                    color: Color.fromARGB(255, 103, 164, 245),
+                    fontSize: 15,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
               ),
-            ),
-            const SizedBox(height: 30),
+            ),const Row(
+                  children: [
+                    Expanded(child: Divider()),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      child: Text("Galini"),
+                    ),
+                    Expanded(child: Divider()),
+                  ],
+                ),
+            const SizedBox(height: 10),
             Center(
               child: Material(
                 color: const Color.fromARGB(255, 103, 164, 245),
@@ -119,7 +144,7 @@ class WelcomeScreen extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 90),
                     child: const Text(
-                      "Let's Start!",
+                      "Get Started",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 22,
@@ -130,7 +155,7 @@ class WelcomeScreen extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 15),
+            const SizedBox(height: 5),
             TextButton(
               onPressed: () {
                 Navigator.push(
@@ -140,32 +165,42 @@ class WelcomeScreen extends StatelessWidget {
                   ),
                 );
               },
-              child: const Row(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                
                 children: [
-                  Text(
-                    "I have an ",
+                  const Text(
+                    "Already have an ",
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Color.fromARGB(255, 103, 164, 245),
                       fontSize: 16,
-                      //decoration: TextDecoration.underline,
                     ),
                   ),
-                  Text(
-                    "Account",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 17,
-                      fontWeight: FontWeight.bold,
-                      //decoration: TextDecoration.underline,
-                    ),
-                  ),
+                  Stack(
+                    alignment: Alignment.centerLeft,
+                    children: [
+                      const Text(
+                        "Account?",
+                        style: TextStyle(
+                          color: Colors.blue,
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold,
+                          decoration: TextDecoration.none,
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 0,
+                        child: Container(
+                          height: 1,
+                          color: Colors.blue,
+                          width: 80,
+                        ),
+                      ),
+                    ],
+                  )
                 ],
               ),
             ),
-            const Spacer(),
           ],
         ),
       ),

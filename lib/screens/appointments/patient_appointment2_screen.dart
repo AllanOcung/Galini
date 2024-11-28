@@ -152,8 +152,11 @@ class _PatientAppointmentBookingScreenState extends State<PatientAppointmentBook
     return Scaffold(
       backgroundColor: const Color(0xFFD3E9FF),
       appBar: AppBar(
-        title: const Text("Book A Meeting", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),),
+        title: const Text("Book Meeting", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),),
         backgroundColor: const Color(0xFFBDDDFC),
+         iconTheme: const IconThemeData(
+          color: Colors.blue, // Set the back arrow color here
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -208,7 +211,7 @@ class _PatientAppointmentBookingScreenState extends State<PatientAppointmentBook
             Center(
               child: ElevatedButton(
                 onPressed: bookAppointment,
-                child: const Text("Confirm Booking", style: TextStyle(color: Colors.blue),),
+                child: const Text("Confirm", style: TextStyle(color: Colors.blue),),
               ),
             ),
           ],

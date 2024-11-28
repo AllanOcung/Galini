@@ -55,7 +55,7 @@ class _AddNewsScreenState extends State<AddNewsScreen> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text(
-          'Add News',
+          'Add Post',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 20,
@@ -63,6 +63,9 @@ class _AddNewsScreenState extends State<AddNewsScreen> {
           ),
         ),
         backgroundColor: const Color(0xFF7D99AA),
+        iconTheme: const IconThemeData(
+          color: Colors.white, // Set the back arrow color here
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -105,7 +108,7 @@ class _AddNewsScreenState extends State<AddNewsScreen> {
                 backgroundColor: const Color(0xFF7D99AA), // Button color
                 foregroundColor: Colors.white, // Text color
               ),
-              child: const Text('Post News'),
+              child: const Text('Post'),
             ),
           ],
         ),

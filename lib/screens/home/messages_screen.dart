@@ -11,7 +11,14 @@ class MessagesScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text("My Chats"),
+        title: const Text(
+          "My Chats",
+          style: TextStyle(
+            fontSize: 25,
+            fontWeight: FontWeight.w500,
+            color: Color.fromARGB(255, 103, 164, 245),
+          ),
+          ),
         automaticallyImplyLeading: false,
         backgroundColor: const Color(0xFFBDDDFC),
         actions: [
@@ -75,6 +82,8 @@ class ChatListView extends StatelessWidget {
           'receiverId': receiverId,
           'name': userName, // Add the receiver's name
         });
+        chatList.sort((a, b) => b['lastMessageTime']?.compareTo(a['lastMessageTime'] ?? DateTime(0)));
+
       } 
     }
 

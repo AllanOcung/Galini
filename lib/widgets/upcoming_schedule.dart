@@ -40,21 +40,26 @@ class UpcomingSchedule extends StatelessWidget {
   }
 
   Future<void> cancelAppointment(BuildContext context, String appointmentId) async {
-    try {
-      await FirebaseFirestore.instance
-          .collection('appointments')
-          .doc(appointmentId)
-          .update({'status': 'cancelled'});
+  try {
+    await FirebaseFirestore.instance
+        .collection('appointments')
+        .doc(appointmentId)
+        .update({'status': 'cancelled'});
 
+    if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Appointment cancelled successfully')),
       );
-    } catch (e) {
+    }
+  } catch (e) {
+    if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to cancel appointment: $e')),
       );
     }
   }
+}
+
 
   Future<void> markAsComplete(BuildContext context, String appointmentId) async {
   try {
@@ -236,9 +241,9 @@ class AppointmentCard extends StatelessWidget {
                 onTap: onCancel,
                 child: Container(
                   width: 110,
-                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  padding: const EdgeInsets.symmetric(vertical: 10),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF4F6FA),
+                    color: const Color.fromARGB(255, 103, 164, 245),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: const Center(
@@ -247,7 +252,7 @@ class AppointmentCard extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
-                        color: Colors.black54,
+                        color: Colors.white,
                       ),
                     ),
                   ),
@@ -257,7 +262,7 @@ class AppointmentCard extends StatelessWidget {
                 onTap: onComplete,  // Call onComplete when this button is pressed
                 child: Container(
                   width: 110,
-                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  padding: const EdgeInsets.symmetric(vertical: 10),
                   decoration: BoxDecoration(
                     color: const Color.fromARGB(255, 103, 164, 245),
                     borderRadius: BorderRadius.circular(10),

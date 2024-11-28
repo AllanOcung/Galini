@@ -5,7 +5,7 @@ import 'package:galini/screens/home/appointment_screen.dart';
 import 'package:galini/screens/home/news_screen.dart';
 import 'package:galini/screens/home/schedule_screen.dart';
 import 'package:galini/screens/home/settings_screen.dart';
-import 'package:galini/screens/therapist/assessment_categories_screen.dart';
+import 'package:galini/screens/home/assessment_categories_screen.dart';
 import 'package:intl/intl.dart';
 
 
@@ -18,7 +18,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
 
-  String userName = "User"; // Placeholder for user name
+  String userName = ""; // Placeholder for user name
   User? currentUser = FirebaseAuth.instance.currentUser; // Get current user
 
   @override
@@ -49,6 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: const Color(0xFFBDDDFC),
         elevation: 0,
@@ -79,19 +80,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 radius: 25,
                 backgroundImage: AssetImage("images/doctor1.jpg"),
               ),
-              // Notification Icon
-              // IconButton(
-              //   icon: const Icon(Icons.notifications, color: Colors.black),
-              //   onPressed: () {
-              //     // Navigate to the notifications screen or show a dialog
-              //     // Navigator.push(
-              //     //   context,
-              //     //   MaterialPageRoute(
-              //     //     builder: (context) => const NotificationsScreen(),
-              //     //   ),
-              //     // );
-              //   },
-              // ),
               InkWell(
               onTap: () {
                 Navigator.push(
@@ -107,130 +95,125 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
-      body: Container(
-        color: Colors.white,
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 15),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.only(top: 15),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: const EdgeInsets.only(left: 10),
+                child: const Text(
+                  'It’s a new day—focus on what brings you peace.',
+                  style: TextStyle(fontSize: 16, color: Colors.black45),
+                ),
+              ),
+              const SizedBox(height: 5),
+              // Search bar
+              Center(
+                child: SizedBox(
+                  height: 50,
+                  width: 335,
+                  child: TextField(
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(Icons.search, color: Colors.grey[600]),
+                      hintText: 'Search',
+                      filled: true,
+                      fillColor: Colors.grey[200],
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 15),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Container(
-                    padding: const EdgeInsets.only(left: 10),
-                    child: const Text(
-                      'What do you need today?',
-                      style: TextStyle(fontSize: 16, color: Colors.grey),
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  // Search bar
-                  Center(
-                    child: SizedBox(
-                      height: 50,
-                      width: 335,
-                      child: TextField(
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.search, color: Colors.grey[600]),
-                          hintText: 'Search',
-                          filled: true,
-                          fillColor: Colors.grey[200],
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide.none,
-                          ),
+                  _buildVisitCard(
+                    context: context,
+                    onTap: () {
+                       Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const AssessmentCategoriesScreen(),
                         ),
-                      ),
-                    ),
+                      );
+                    },
+                    icon: Icons.self_improvement,
+                    iconColor: const Color.fromARGB(255, 103, 164, 245),
+                    title: "Self",
+                    subtitle: "Assessment",
+                    backgroundColor: const Color.fromARGB(255, 103, 164, 245),
                   ),
-                  const SizedBox(height: 15),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      _buildVisitCard(
-                        context: context,
-                        onTap: () {
-                           Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const AssessmentCategoriesScreen(),
-                            ),
-                          );
-                        },
-                        icon: Icons.self_improvement,
-                        iconColor: const Color.fromARGB(255, 103, 164, 245),
-                        title: "Self",
-                        subtitle: "Assessment",
-                        backgroundColor: const Color.fromARGB(255, 103, 164, 245),
-                      ),
-                      _buildVisitCard(
-                        context: context,
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const NewsScreen(),
-                            ),
-                          );
-                        },
-                        icon: Icons.quiz,
-                        iconColor: const Color.fromARGB(255, 103, 164, 245),
-                        title: "News",
-                        subtitle: "Feed",
-                        backgroundColor: Colors.white, // FDFCDE
-                        textColor: Colors.black,
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 15),
-                  Container(
-                    padding: const EdgeInsets.only(left: 10, right: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                        'Next Appointment',
-                        style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.bold),
-                      ),
-                      //SizedBox(width: 135),
-                      InkWell(
-                        onTap: (){
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const ScheduleScreen(),
-                            ),
-                          );
-                        },
-                        child: const Text(
-                          "See all",
-                          style: TextStyle(fontSize: 15, color: Colors.grey),
-                          
+                  _buildVisitCard(
+                    context: context,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const NewsScreen(),
                         ),
-                      ),
-                      ],                   
-                    ),
+                      );
+                    },
+                    icon: Icons.quiz,
+                    iconColor: const Color.fromARGB(255, 103, 164, 245),
+                    title: "News",
+                    subtitle: "  Feed",
+                    backgroundColor: Colors.white, // FDFCDE
+                    textColor: Colors.black,
                   ),
-                  // Next Appointment Card
-                  _nextAppointmentCard(),
-                  const SizedBox(height: 15),
-                  // Popular Therapists section
-                  const Padding(
-                    padding: EdgeInsets.only(left: 15),
-                    child: Text(
-                      "Popular Therapists",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black54,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  _specialistList(),
                 ],
               ),
-            ),
+              const SizedBox(height: 15),
+              Container(
+                padding: const EdgeInsets.only(left: 10, right: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                    'Next Appointment',
+                    style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.bold),
+                  ),
+                  //SizedBox(width: 135),
+                  InkWell(
+                    onTap: (){
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ScheduleScreen(),
+                        ),
+                      );
+                    },
+                    child: const Text(
+                      "See all",
+                      style: TextStyle(fontSize: 15, color: Colors.grey),
+                      
+                    ),
+                  ),
+                  ],                   
+                ),
+              ),
+              // Next Appointment Card
+              _nextAppointmentCard(),
+              const SizedBox(height: 15),
+              // Popular Therapists section
+              const Padding(
+                padding: EdgeInsets.only(left: 15),
+                child: Text(
+                  "Popular Therapists",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black54,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 5),
+              _specialistList(),
+            ],
           ),
         ),
       ),
@@ -297,6 +280,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 subtitle,
                 style: TextStyle(
                   color: textColor.withOpacity(0.7),
+                  fontWeight: FontWeight.w800,
                 ),
               ),
             ],
@@ -331,7 +315,7 @@ class _HomeScreenState extends State<HomeScreen> {
             padding: EdgeInsets.all(16.0),
             child: Center(
               child: Text(
-                'you have No upcoming meetings',
+                'You have no upcoming appointments.',
                 style: TextStyle(fontSize: 16, color: Colors.grey),
                 textAlign: TextAlign.center,
               ),
@@ -343,6 +327,7 @@ class _HomeScreenState extends State<HomeScreen> {
       // Extract the first appointment document
       var appointment = snapshot.data!.docs.first;
       String therapistName = appointment['therapistName'] ?? 'Therapist';
+      String therapistImage = 'images/doctor1.jpg';
 
       // Safely handle `appointmentDate` as a Firestore Timestamp
       Timestamp? appointmentDateTimestamp = appointment['appointmentDate'];
@@ -363,8 +348,8 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: const EdgeInsets.all(10),
               child: Row(
                 children: [
-                  const CircleAvatar(
-                    backgroundImage: AssetImage('images/doctor1.jpg'), // Placeholder image
+                  CircleAvatar(
+                    backgroundImage: AssetImage(therapistImage), // Using dynamic image or placeholder
                     radius: 30,
                   ),
                   const SizedBox(width: 20),
@@ -400,6 +385,7 @@ class _HomeScreenState extends State<HomeScreen> {
     },
   );
 }
+
 
 
   Widget _specialistList() {

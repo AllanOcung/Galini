@@ -12,7 +12,13 @@ class InboxScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text("My Chats"),
+        title: const Text(
+          "My Chats",
+          style: TextStyle(
+            color: Colors.white, 
+            fontWeight: FontWeight.bold,
+            ),
+          ),
         automaticallyImplyLeading: false,
         backgroundColor: const Color(0xFF7D99AA),
         actions: [
@@ -117,7 +123,7 @@ class ChatList extends StatelessWidget {
               leading: CircleAvatar(
                 backgroundColor: Colors.grey.shade300,
                 child: const Text(
-                  'allan',
+                  'a',
                   style: TextStyle(color: Colors.white),
                 ),
               ),

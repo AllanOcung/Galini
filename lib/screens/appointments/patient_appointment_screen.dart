@@ -183,8 +183,18 @@ Future<void> bookAppointment() async {
     return Scaffold(
       backgroundColor: const Color(0xFFD3E9FF),
       appBar: AppBar(
-        title: const Text("Book Appointment"),
+        title: const Text(
+          "Book Meeting",
+          style: TextStyle(
+            fontSize: 25,
+            fontWeight: FontWeight.w500,
+            color: Color.fromARGB(255, 103, 164, 245),
+          ),
+          ),
         backgroundColor: const Color(0xFFBDDDFC),
+        iconTheme: const IconThemeData(
+          color: Colors.blue, // Set the back arrow color here
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -276,7 +286,7 @@ Future<void> bookAppointment() async {
             Center(
               child: ElevatedButton(
                 onPressed: bookAppointment,
-                child: const Text("Book Appointment"),
+                child: const Text("Confirm", style: TextStyle(color: Colors.blue),),
               ),
             ),
           ],

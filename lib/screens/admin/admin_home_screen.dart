@@ -57,20 +57,20 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
     }
   }
 
-  Future<void> fetchTotalUsersCount() async {
-    try {
-      QuerySnapshot snapshot = await FirebaseFirestore.instance
-          .collection('users')
-          .where('role', isEqualTo: 'user')
-          .get();
+  Future<int> fetchTotalUsersCount() async {
+  try {
+    QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .where('role', isEqualTo: 'user')
+        .get();
 
-      setState(() {
-       totalUsersCount = snapshot.docs.length; 
-      });
-    } catch (e) {
-      print('Error fetching total users: $e');
-    }
+    return snapshot.docs.length;  // Return the count
+  } catch (e) {
+    print('Error fetching total users: $e');
+    return 0;  // Return 0 in case of an error
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -158,8 +158,8 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
               ),
               const SizedBox(height: 10),
               _quickActionButton(context, "View All Therapist Requests"),
-              _quickActionButton(context, "View All Users"),
-              _quickActionButton(context, "Admin Settings"),
+              // _quickActionButton(context, "View All Users"),
+              // _quickActionButton(context, "Admin Settings"),
             ],
           ),
         ),
@@ -205,20 +205,9 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
         // Implement navigation or action
       },
       style: ElevatedButton.styleFrom(backgroundColor: const Color.fromARGB(255, 103, 164, 245)),
-      child: Text(label),
+      child: Text(label, style: const TextStyle(color: Colors.black),),
     );
   }
 }
 
-// Dummy screen for the Requests List, replace with your actual screen
-// class RequestsListScreen extends StatelessWidget {
-//   const RequestsListScreen({super.key});
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(title: const Text("Pending Therapist Requests")),
-//       body: Center(child: const Text("List of Pending Therapist Requests")),
-//     );
-//   }
-// }

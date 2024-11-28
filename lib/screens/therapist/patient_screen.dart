@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:galini/screens/therapist/patient_details_screen.dart';
 
@@ -8,131 +7,115 @@ class PatientsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Get the current user's ID
-    final String? userId = FirebaseAuth.instance.currentUser?.uid;
-
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text("Patients", textAlign: TextAlign.center),
-        backgroundColor: Color(0xFF7D99AA),
+        title: const Text(
+          "Patients",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 24, // Adjusted font size for better readability
+          ),
+        ),
+        backgroundColor: const Color(0xFF7D99AA),
         automaticallyImplyLeading: false,
         centerTitle: true,
+        elevation: 4, // Add shadow for a more elevated look
       ),
-      body: userId == null
-          ? const Center(child: Text("User not logged in"))
-          : StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection('appointments')
-                  .where('therapistId', isEqualTo: userId)
-                  .snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                  return const Center(child: Text("No patients found"));
-                }
+      body: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('users')
+            .where('role', isEqualTo: 'user') // Filter users by role
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            return const Center(
+              child: Text(
+                "No patients found",
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.grey,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            );
+          }
 
-                final appointments = snapshot.data!.docs;
+          final patients = snapshot.data!.docs;
 
-                // Use a Set to track unique patientIds
-                Set<String> uniquePatientIds = {};
-                List<Map<String, dynamic>> uniquePatientsList = [];
+          // Sort patients alphabetically by name
+          patients.sort((a, b) {
+            final patientNameA = (a.data() as Map<String, dynamic>)['fullName'] ?? '';
+            final patientNameB = (b.data() as Map<String, dynamic>)['fullName'] ?? '';
+            return patientNameA.compareTo(patientNameB);
+          });
 
-                for (var appointment in appointments) {
-                  final patientId = appointment['patientId'] ?? '';
+          return ListView.separated(
+            itemCount: patients.length,
+            separatorBuilder: (context, index) => const Divider(
+              color: Colors.grey,
+              thickness: 0.8,
+            ),
+            itemBuilder: (context, index) {
+              final patient = patients[index].data() as Map<String, dynamic>;
+              final patientId = patients[index].id;
+              final patientName = patient['fullName'] ?? 'Unknown Patient';
+              final helpReasons = List<String>.from(patient['helpReasons'] ?? []);
 
-                  // Add to Set if it's a new patientId, ensuring uniqueness
-                  if (!uniquePatientIds.contains(patientId)) {
-                    uniquePatientIds.add(patientId);
-                    uniquePatientsList.add(appointment.data() as Map<String, dynamic>);
-                  }
-                }
-
-                return ListView.separated(
-                  itemCount: uniquePatientsList.length,
-                  separatorBuilder: (context, index) => const Divider(),
-                  itemBuilder: (context, index) {
-                    final patientId = uniquePatientsList[index]['patientId'];
-                    final patientName = uniquePatientsList[index]['patientName'] ?? 'Unknown Patient';
-
-                    // Fetch helpReasons from the users collection using patientId
-                    return FutureBuilder<DocumentSnapshot>(
-                      future: FirebaseFirestore.instance
-                          .collection('users')
-                          .doc(patientId)
-                          .get(),
-                      builder: (context, userSnapshot) {
-                        if (userSnapshot.connectionState == ConnectionState.waiting) {
-                          return const ListTile(
-                            title: Text("Loading patient details..."),
-                          );
-                        }
-
-                        if (userSnapshot.hasError) {
-                          return const ListTile(
-                            title: Text("Error loading patient details"),
-                          );
-                        }
-
-                        if (!userSnapshot.hasData || !userSnapshot.data!.exists) {
-                          return const ListTile(
-                            title: Text("No data found for this patient"),
-                          );
-                        }
-
-                        final userDoc = userSnapshot.data!;
-                        final helpReasons = List<String>.from(userDoc['helpReasons'] ?? []);
-
-                        return ListTile(
-                          contentPadding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-                          leading: CircleAvatar(
-                            backgroundColor: Colors.grey.shade300,
-                            child: Text(
-                              patientName[0], // Display the first letter of the patient's name
-                              style: const TextStyle(color: Colors.white),
-                            ),
-                          ),
-                          title: Text(patientName),
-                          subtitle: helpReasons.isEmpty
-                              ? const Text("No conditions listed")
-                              : Text(helpReasons.join(', ')), // Displaying the list of helpReasons
-                          trailing: const Icon(Icons.arrow_forward_ios),
-                          onTap: () {
-                            // Navigate to detailed patient screen
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => PatientDetailsScreen(patientId: patientId),
-                              ),
-                            );
-                          },
-                        );
-                      },
+              return Card(
+                color: Colors.grey[300],
+                margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                elevation: 3,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: ListTile(
+                  contentPadding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+                  leading: const CircleAvatar(
+                    radius: 28,
+                    backgroundImage: AssetImage("images/doctor2.jpg"),
+                  ),
+                  title: Text(
+                    patientName,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  subtitle: helpReasons.isEmpty
+                      ? const Text(
+                          "No conditions listed",
+                          style: TextStyle(color: Colors.grey),
+                        )
+                      : Text(
+                          helpReasons.join(', '),
+                          style: const TextStyle(color: Colors.blueGrey),
+                        ),
+                  trailing: const Icon(
+                    Icons.arrow_forward_ios,
+                    color: Color(0xFF7D99AA),
+                  ),
+                  onTap: () {
+                    // Navigate to detailed patient screen
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PatientDetailsScreen(patientId: patientId),
+                      ),
                     );
                   },
-                );
-              },
-            ),
+                ),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }
-
-// // Placeholder for the Patient Details Screen
-// class PatientDetailsScreen extends StatelessWidget {
-//   final String patientName;
-//   const PatientDetailsScreen({Key? key, required this.patientName}) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text("$patientName's Details"),
-//       ),
-//       body: Center(
-//         child: Text("Details for $patientName"),
-//       ),
-//     );
-//   }
-// }
